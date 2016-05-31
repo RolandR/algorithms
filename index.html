@@ -45,9 +45,18 @@
 			var binarySearchTree = new BinarySearchTree();
 			var avlTree = new AVLTree();
 
+			function buildBinaryTree(s){
+				s = s.split("");
+				for(var i in s){
+					binarySearchTree.insert(s[i], s[i]);
+				}
+				binarySearchTree.print("out");
+			}
+
 			function avlTreePush(c){
-				avlTree.insert(c, c);
+				var node = avlTree.insert(c, c);
 				avlTree.print("out");
+				return node;
 			}
 		</script>
 	</body>

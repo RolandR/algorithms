@@ -13,7 +13,7 @@ function BinarySearchTree(){
 
 	function Element(p, l){
 		var e = null;
-		var left = l;
+		var isLeftChild = l;
 		var parent = p;
 		var left = null;
 		var right = null;
@@ -30,8 +30,8 @@ function BinarySearchTree(){
 			,setRight: function(p){right = p;}
 			,getExternal: function(){return isExternal;}
 			,setExternal: function(p){isExternal = p;}
-			,isLeft: function(){return left;}
-			,setIsLeft: function(p){left = p;}
+			,isLeft: function(){return isLeftChild;}
+			,setIsLeft: function(p){isLeftChild = p;}
 		};
 	}
 
@@ -116,20 +116,70 @@ function BinarySearchTree(){
 	function remove(key){
 		var node = search(key);
 		if(node){
-			if(node.getParent()){
-				var replacement;
-				if(node.getLeft().getExternal()){
-					replacement = node.getRight();
-				} else if(node.getRight().getExternal()){
-					replacement = node.getLeft();
-				}
-				replacement.setIsLeft(node.isLeft());
-				if(replacement.isLeft()){
-					node.getParent().setLeft(replacement);
-				} else {
-					node.getParent().setRight(replacement);
-				}
+			return removeNode(node);
+		}
+		return null;
+	}
+
+	function removeNode(node){
+		
+		if(node.getLeft().getExternal()){
+			return removeAboveExternal(node.getLeft());
+		} else if(node.getRight().getExternal()){
+			return removeAboveExternal(node.getRight());
+		} else {
+
+			var traverseNode = node.getRight();
+			while(!traverseNode.getExternal()){
+				traverseNode = traverseNode.getLeft();
 			}
+
+			swap(node, traverseNode.getParent());
+
+			return removeAboveExternal(traverseNode);
+			
+		}
+		
+	}
+
+	function removeAboveExternal(exNode){
+		
+		var node = exNode.getParent();
+		var parent = node.getParent();
+		var replacement;
+		
+		if(exNode.isLeft()){
+			replacement = node.getRight();
+		} else {
+			replacement = node.getLeft();
+		}
+		
+		replacement.setIsLeft(node.isLeft());
+		replacement.setParent(parent);
+		
+		if(parent){
+			if(node.isLeft()){
+				parent.setLeft(replacement);
+			} else {
+				parent.setRight(replacement);
+			}
+		} else {
+			root = replacement;
+		}
+
+		return node;
+		
+	}
+
+	function keysInorder(node){
+		if(!node){
+			node = root;
+		}
+		
+		if(node.getExternal()){
+			return "";
+		} else {
+			return keysInorder(node.getLeft()) + node.getE().getKey() + keysInorder(node.getRight());
 		}
 	}
 
@@ -188,6 +238,8 @@ function BinarySearchTree(){
 		 insert: insert
 		,search: search
 		,remove: remove
+		,removeNode: removeNode
+		,keysInorder: keysInorder
 		,print: print
 		,getRoot: function(){return root;}
 	};
@@ -213,15 +265,7 @@ function binaryTreeSort(sortString){
 
 	tree.print("out");
 
-	var sortedString = inorderPrintKeys(tree.getRoot());
-	
-	function inorderPrintKeys(node){
-		if(node.getExternal()){
-			return "";
-		} else {
-			return inorderPrintKeys(node.getLeft()) + node.getE().getKey() + inorderPrintKeys(node.getRight());
-		}
-	}
+	var sortedString = tree.keysInorder(tree.getRoot());
 
 	return sortedString;
 	
