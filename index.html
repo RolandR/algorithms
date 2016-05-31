@@ -53,6 +53,14 @@
 				binarySearchTree.print("out");
 			}
 
+			function buildAvlTree(s){
+				s = s.split("");
+				for(var i in s){
+					avlTree.insert(s[i], s[i]);
+				}
+				avlTree.print("out");
+			}
+			
 			function avlTreePush(c){
 				var node = avlTree.insert(c, c);
 				avlTree.print("out");

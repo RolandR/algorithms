@@ -167,6 +167,8 @@ function BinarySearchTree(){
 			root = replacement;
 		}
 
+		length--;
+
 		return node;
 		
 	}

@@ -35,6 +35,9 @@ function AVLTree(){
 			,setIsLeft: function(p){isLeftChild = p;}
 			,getHeight: function(){return height;}
 			,setHeight: function(p){height = p;}
+			,getBalance: function(){
+				return left.getHeight() - right.getHeight();
+			}
 		};
 	}
 
@@ -174,23 +177,31 @@ function AVLTree(){
 
 	function updateHeightRecursively(node){
 		if(node){
-			var newHeight = max([node.getLeft().getHeight(), node.getRight().getHeight()]) + 1;
-			if(newHeight == node.getHeight()){
+			var oldHeight = node.getHeight();
+			node.setHeight(max([node.getLeft().getHeight(), node.getRight().getHeight()]) + 1);
+			
+			var lean = node.getBalance(); // positive means left-leaning
+			if(lean > 1){
+				if(node.getLeft().getBalance() < 0){
+					rotate(node.getLeft(), node.getLeft().getRight());
+				} else {
+					rotate(node, node.getLeft());
+				}
+				return;
+			} else if(lean < -1){
+				if(node.getRight().getBalance() > 0){
+					rotate(node.getRight(), node.getRight().getLeft());
+				} else {
+					rotate(node, node.getRight());
+				}
 				return;
 			} else {
-				node.setHeight(newHeight);
-				var lean = node.getRight().getHeight() - node.getLeft().getHeight(); // negative means left-leaning
-				if(lean > 1){
-					rotate(node, node.getRight());
-					return;
-				} else if(lean < -1){
-					rotate(node, node.getLeft());
-					return;
-				} else {
+				if(oldHeight != node.getHeight()){
 					updateHeightRecursively(node.getParent());
-					return;
 				}
+				return;
 			}
+			
 		} else {
 			return;
 		}
@@ -233,20 +244,74 @@ function AVLTree(){
 	function remove(key){
 		var node = search(key);
 		if(node){
-			if(node.getParent()){
-				var replacement;
-				if(node.getLeft().getExternal()){
-					replacement = node.getRight();
-				} else if(node.getRight().getExternal()){
-					replacement = node.getLeft();
-				}
-				replacement.setIsLeft(node.isLeft());
-				if(replacement.isLeft()){
-					node.getParent().setLeft(replacement);
-				} else {
-					node.getParent().setRight(replacement);
-				}
+			return removeNode(node);
+		}
+		return null;
+	}
+
+	function removeNode(node){
+		
+		if(node.getLeft().getExternal()){
+			return removeAboveExternal(node.getLeft());
+		} else if(node.getRight().getExternal()){
+			return removeAboveExternal(node.getRight());
+		} else {
+
+			var traverseNode = node.getRight();
+			while(!traverseNode.getExternal()){
+				traverseNode = traverseNode.getLeft();
 			}
+
+			swap(node, traverseNode.getParent());
+
+			return removeAboveExternal(traverseNode);
+			
+		}
+		
+	}
+
+	function removeAboveExternal(exNode){
+		
+		var node = exNode.getParent();
+		var parent = node.getParent();
+		var replacement;
+		
+		if(exNode.isLeft()){
+			replacement = node.getRight();
+		} else {
+			replacement = node.getLeft();
+		}
+		
+		replacement.setIsLeft(node.isLeft());
+		replacement.setParent(parent);
+		
+		if(parent){
+			if(node.isLeft()){
+				parent.setLeft(replacement);
+			} else {
+				parent.setRight(replacement);
+			}
+		} else {
+			root = replacement;
+		}
+
+		length--;
+
+		updateHeightRecursively(parent);
+
+		return node;
+		
+	}
+
+	function keysInorder(node){
+		if(!node){
+			node = root;
+		}
+		
+		if(node.getExternal()){
+			return "";
+		} else {
+			return keysInorder(node.getLeft()) + node.getE().getKey() + keysInorder(node.getRight());
 		}
 	}
 
@@ -307,6 +372,8 @@ function AVLTree(){
 		 insert: insert
 		,search: search
 		,remove: remove
+		,removeNode: removeNode
+		,keysInorder: keysInorder
 		,rotate: rotate
 		,print: print
 		,getRoot: function(){return root;}
@@ -334,15 +401,7 @@ function avlTreeSort(sortString){
 
 	tree.print("out");
 
-	var sortedString = inorderPrintKeys(tree.getRoot());
-	
-	function inorderPrintKeys(node){
-		if(node.getExternal()){
-			return "";
-		} else {
-			return inorderPrintKeys(node.getLeft()) + node.getE().getKey() + inorderPrintKeys(node.getRight());
-		}
-	}
+	var sortedString = tree.keysInorder();
 
 	return sortedString;
 	
