@@ -2,6 +2,11 @@
 
 === AVL Tree ===
 
+	Restructure is O(1)
+	Find is O(log n)
+	Insert is O(log n)
+	Remove is O(log n)
+
 */
 
 
