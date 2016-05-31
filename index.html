@@ -3,12 +3,16 @@
 	<head>
 		<meta charset="utf-8" />
 		
+		<script type="text/javascript" src="_js/aux.js"></script>
+		
 		<script type="text/javascript" src="_js/dataStructures/stack.js"></script>
 		<script type="text/javascript" src="_js/dataStructures/singlyLinkedList.js"></script>
 		<script type="text/javascript" src="_js/dataStructures/doublyLinkedList.js"></script>
 		<script type="text/javascript" src="_js/dataStructures/priorityQueue.js"></script>
 		<script type="text/javascript" src="_js/dataStructures/heap.js"></script>
 		<script type="text/javascript" src="_js/dataStructures/binarySearchTree.js"></script>
+		
+		<script type="text/javascript" src="_js/trees/avlTree.js"></script>
 		
 		<title>
 			All the Algorithms
@@ -32,22 +36,19 @@
 
 
 		<script type="text/javascript">
-
-			var stack;
-			var singlyLinkedList;
-			var doublyLinkedList;
-			var priorityQueue;
-			var heap;
-			var binarySearchTree;
 			
-			window.onload = function(){
-				stack = new Stack();
-				singlyLinkedList = new SinglyLinkedList();
-				doublyLinkedList = new DoublyLinkedList();
-				priorityQueue = new PriorityQueue();
-				heap = new Heap();
-				binarySearchTree = new BinarySearchTree();
-			};
+			var stack = new Stack();
+			var singlyLinkedList = new SinglyLinkedList();
+			var doublyLinkedList = new DoublyLinkedList();
+			var priorityQueue = new PriorityQueue();
+			var heap = new Heap();
+			var binarySearchTree = new BinarySearchTree();
+			var avlTree = new AVLTree();
+
+			function avlTreePush(c){
+				avlTree.insert(c, c);
+				avlTree.print("out");
+			}
 		</script>
 	</body>
 </html>

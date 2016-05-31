@@ -1,11 +1,11 @@
 /*
 
-=== Binary Search Tree ===
+=== AVL Tree ===
 
 */
 
 
-function BinarySearchTree(){
+function AVLTree(){
 
 	var root = new Element(null, false);
 
@@ -13,11 +13,12 @@ function BinarySearchTree(){
 
 	function Element(p, l){
 		var e = null;
-		var left = l;
+		var isLeftChild = l;
 		var parent = p;
 		var left = null;
 		var right = null;
 		var isExternal = true;
+		var height = 0;
 
 		return {
 			 getE: function(){return e;}
@@ -30,8 +31,10 @@ function BinarySearchTree(){
 			,setRight: function(p){right = p;}
 			,getExternal: function(){return isExternal;}
 			,setExternal: function(p){isExternal = p;}
-			,isLeft: function(){return left;}
-			,setIsLeft: function(p){left = p;}
+			,isLeft: function(){return isLeftChild;}
+			,setIsLeft: function(p){isLeftChild = p;}
+			,getHeight: function(){return height;}
+			,setHeight: function(p){height = p;}
 		};
 	}
 
@@ -51,10 +54,99 @@ function BinarySearchTree(){
 		b.setE(aContent);
 	}
 
+	function rotate(rRoot, pivot){
+		/*
+		    root (b)
+		    /  \
+		   /    \
+		  a    pivot (d)
+		       /   \
+		      c     e
+
+		      to
+
+				pivot (d)
+				/  \
+			   /    \
+			root(b)  e
+			/   \
+		   a     c
+
+			(down is left rotation, up is right)
+
+		*/
+
+		if(pivot.getParent() != rRoot){
+			console.error("Tried to rotate where pivot isn't child of root: ");
+			console.log(rRoot.getE().getKey());
+			console.log(pivot.getE().getKey());
+			console.log(pivot.getParent().getE().getKey());
+			return false;
+		}
+
+		var rotateRight = true;
+		if(rRoot.getRight() == pivot){ // as per wikipedia, I guess
+			rotateRight = false;
+		}	
+
+		// subree that will move from pivot to root
+		var movedSubtree = null;
+		
+		if(rotateRight){
+			
+			movedSubtree = pivot.getRight();
+			pivot.setRight(rRoot);
+			rRoot.setLeft(movedSubtree);
+			
+		} else {
+			
+			movedSubtree = pivot.getLeft();
+			pivot.setLeft(rRoot);
+			rRoot.setRight(movedSubtree);
+			
+		}
+
+		// Attach pivot to root's parent
+		var parent = rRoot.getParent();
+		if(parent){
+			if(rRoot.isLeft()){
+				parent.setLeft(pivot);
+				pivot.setIsLeft(true);
+			} else {
+				parent.setRight(pivot);
+				pivot.setIsLeft(false);
+			}
+		} else {
+			root = pivot;
+			pivot.setIsLeft(false);
+		}
+
+		rRoot.setIsLeft(!rotateRight);
+		if(movedSubtree){
+			movedSubtree.setIsLeft(rotateRight);
+			movedSubtree.setParent(rRoot);
+		}
+		
+		rRoot.setParent(pivot);
+		pivot.setParent(parent);
+
+		rRoot.setHeight(max([rRoot.getLeft().getHeight(), rRoot.getRight().getHeight()])+1);
+		pivot.setHeight(max([pivot.getLeft().getHeight(), pivot.getRight().getHeight()])+1);
+		updateHeightRecursively(pivot.getParent());
+
+		return true;
+
+		
+	}
+
 	function insert(key, value){
 		var pair = new Pair(key, value);
+		
+		var newNode = insertRecursively(root, pair);
 
-		return insertRecursively(root, pair);	
+		updateHeightRecursively(newNode.getParent());
+		
+		return newNode;
 		
 	}
 
@@ -62,6 +154,7 @@ function BinarySearchTree(){
 		
 		if(node.getExternal()){
 			node.setExternal(false);
+			node.setHeight(1);
 			node.setE(pair);
 			node.setLeft(new Element(node, true));
 			node.setRight(new Element(node, false));
@@ -76,6 +169,30 @@ function BinarySearchTree(){
 			} else {
 				return insertRecursively(node.getRight(), pair);
 			}
+		}
+	}
+
+	function updateHeightRecursively(node){
+		if(node){
+			var newHeight = max([node.getLeft().getHeight(), node.getRight().getHeight()]) + 1;
+			if(newHeight == node.getHeight()){
+				return;
+			} else {
+				node.setHeight(newHeight);
+				var lean = node.getRight().getHeight() - node.getLeft().getHeight(); // negative means left-leaning
+				if(lean > 1){
+					rotate(node, node.getRight());
+					return;
+				} else if(lean < -1){
+					rotate(node, node.getLeft());
+					return;
+				} else {
+					updateHeightRecursively(node.getParent());
+					return;
+				}
+			}
+		} else {
+			return;
 		}
 	}
 
@@ -152,12 +269,14 @@ function BinarySearchTree(){
 	}
 
 	function buildFancy(node){
-		
-		if(node.getExternal()){
-			return ['<span style="background-color: #FFFFAA">[]</span>'];
+
+		if(!node){
+			return ['<span style="background-color: #FFAAAA">-</span>'];
+		} else if(node.getExternal()){
+			return ['<span style="background-color: #FFFFAA">'+node.getHeight()+' []</span>'];
 		} else {				
 			var out = [];
-			out.push('<span style="background-color: #FFCCAA">('+node.getE().getKey()+', '+node.getE().getValue()+')</span>');
+			out.push('<span style="background-color: #FFCCAA">'+node.getHeight()+' ('+node.getE().getKey()+', '+node.getE().getValue()+')</span>');
 			
 			var left = buildFancy(node.getLeft());
 			var right = buildFancy(node.getRight());
@@ -188,6 +307,7 @@ function BinarySearchTree(){
 		 insert: insert
 		,search: search
 		,remove: remove
+		,rotate: rotate
 		,print: print
 		,getRoot: function(){return root;}
 	};
@@ -200,9 +320,10 @@ function BinarySearchTree(){
 
 */
 
-function binaryTreeSort(sortString){
+
+function avlTreeSort(sortString){
 	
-	var tree = new BinarySearchTree();
+	var tree = new AVLTree();
 	
 	sortString = sortString.split("");
 
@@ -226,7 +347,6 @@ function binaryTreeSort(sortString){
 	return sortedString;
 	
 }
-
 
 
 
