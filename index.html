@@ -13,6 +13,7 @@
 		<script type="text/javascript" src="_js/dataStructures/binarySearchTree.js"></script>
 		
 		<script type="text/javascript" src="_js/trees/avlTree.js"></script>
+		<script type="text/javascript" src="_js/trees/redBlackTree.js"></script>
 		
 		<title>
 			All the Algorithms
@@ -44,6 +45,7 @@
 			var heap = new Heap();
 			var binarySearchTree = new BinarySearchTree();
 			var avlTree = new AVLTree();
+			var redBlackTree = new RedBlackTree();
 
 			function buildBinaryTree(s){
 				s = s.split("");
@@ -59,6 +61,14 @@
 					avlTree.insert(s[i], s[i]);
 				}
 				avlTree.print("out");
+			}
+
+			function buildRedBlackTree(s){
+				s = s.split("");
+				for(var i in s){
+					redBlackTree.insert(s[i]);
+				}
+				redBlackTree.print("out");
 			}
 			
 			function avlTreePush(c){
