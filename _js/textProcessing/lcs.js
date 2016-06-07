@@ -4,7 +4,7 @@
 	Find longest common subsequences of two texts
 */
 
-function findLCS(text1, text2){
+function findLCS(text1, text2, findAll){
 	var lengths = [];
 	
 	for(var i = -1; i < text1.length; i++){
@@ -36,18 +36,22 @@ function findLCS(text1, text2){
 	console.log(grid);
 
 
-	function getLCS(i, k){
+	function getAllLCS(i, k){
 		if(i < 0 || k < 0){
 			return [""];
 		} else if (lengths[i][k-1] == lengths[i][k] && lengths[i-1][k] == lengths[i][k]) {
-			return getLCS(i, k-1).concat(getLCS(i-1, k));
-			
+			var results = getAllLCS(i, k-1).concat(getAllLCS(i-1, k));
+			var resultsSet = new Set();
+			for(var r in results){
+				resultsSet.insert(results[r]);
+			}
+			return resultsSet.toArray();
 		} else if (lengths[i][k-1] == lengths[i][k]) {
-			return getLCS(i, k-1);
+			return getAllLCS(i, k-1);
 		} else if (lengths[i-1][k] == lengths[i][k]) {
-			return getLCS(i-1, k);
+			return getAllLCS(i-1, k);
 		} else {
-			var results = getLCS(i-1, k-1);
+			var results = getAllLCS(i-1, k-1);
 			for(var r in results){
 				results[r] += text1.charAt(i);
 			}
@@ -55,13 +59,22 @@ function findLCS(text1, text2){
 		}
 	}
 
-	var results = getLCS(text1.length-1, text2.length-1);
-	var resultsSet = new Set();
-	for(var r in results){
-		resultsSet.insert(results[r]);
+	function getLCS(i, k){
+		if(i < 0 || k < 0){
+			return "";
+		} else if (lengths[i][k-1] == lengths[i][k]) {
+			return getLCS(i, k-1);
+		} else if (lengths[i-1][k] == lengths[i][k]) {
+			return getLCS(i-1, k);
+		} else {
+			return getLCS(i-1, k-1) + text1.charAt(i);
+		}
 	}
-	return resultsSet.toArray();
 
-	
+	if(findAll){
+		return getAllLCS(text1.length-1, text2.length-1);
+	} else {
+		return getLCS(text1.length-1, text2.length-1);
+	}
 
 }
