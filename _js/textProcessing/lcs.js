@@ -14,8 +14,9 @@ function findLCS(text1, text2, findAll){
 	for(var k = -1; k < text2.length; k++){
 		lengths[-1][k] = 0;
 	}
-
+	var padWidth = max([(text1.length+"").length, (text2.length+"").length]);
 	var grid = " " + text2 + "\n";
+	
 	for(var i = 0; i < text1.length; i++){
 		var line = text1.charAt(i);
 		for(var k = 0; k < text2.length; k++){
@@ -26,7 +27,7 @@ function findLCS(text1, text2, findAll){
 				lengths[i][k] = max([lengths[i][k-1], lengths[i-1][k]]);
 			}
 
-			line += lengths[i][k];
+			line += pad(lengths[i][k], padWidth, " ");
 			
 		}
 
