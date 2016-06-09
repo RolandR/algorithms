@@ -59,6 +59,10 @@ function SinglyLinkedList(){
 		}
 	}
 
+	function peek(){
+		return first;
+	}
+
 	function print(){
 		var outString = "Length: "+length+"\n";
 
@@ -80,6 +84,7 @@ function SinglyLinkedList(){
 		 insert: insert
 		,insertFirst: insertFirst
 		,remove: remove
+		,peek: peek
 		,print: print
 	};
 }

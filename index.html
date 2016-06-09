@@ -23,6 +23,9 @@
 		
 		<script type="text/javascript" src="_js/textProcessing/lcs.js"></script>
 		
+		<script type="text/javascript" src="_js/graphs/graph.js"></script>
+		<script type="text/javascript" src="_js/graphs/graphTool.js"></script>
+		
 		<title>
 			All the Algorithms
 		</title>
@@ -31,9 +34,66 @@
 				margin: 0px;
 				padding: 0px;
 				border: none;
+				box-sizing: border-box;
+			}
+			html{
+				width: 100%;
+				height: 100%;
 			}
 			body{
 				font-family: monospace;
+				padding: 10px;
+				width: 100%;
+				height: 100%;
+			}
+			#graphTool{
+				width: 100%;
+				height: 90%;
+				position: relative;
+			}
+			#graphTool *{
+				-webkit-touch-callout: none; /* iOS Safari */
+				-webkit-user-select: none;   /* Chrome/Safari/Opera */
+				-khtml-user-select: none;    /* Konqueror */
+				-moz-user-select: none;      /* Firefox */
+				-ms-user-select: none;       /* Internet Explorer/Edge */
+				user-select: none;           /* Non-prefixed version, currently
+												not supported by any browser */
+			}
+			#graphTool canvas{
+				border: 1px #AAAAAA solid;
+			}
+			#graphTool div.vertexLabel{
+				position: absolute;
+				height: 32px;
+				width: 32px;
+				margin-top: -15px;
+				margin-left: -15px;
+				cursor: pointer;
+				text-align: center;
+				padding-top: 7px;
+				font-size: 16px;
+				font-family: sans-serif;
+
+				border: 1px #777777 solid;
+				border-radius: 100px;
+				background-color: #EEEEEE;
+
+				/*background-color: rgba(0, 255, 0, 0.2);*/
+			}
+			#graphTool div.vertexLabel:hover{
+				background-color: #EEF9FF;
+			}
+			#graphTool div.vertexLabel.activeVertex{
+				background-color: #FFCCCC;
+			}
+			#graphTool div.vertexLabel.activeVertex:hover{
+				background-color: #FFEEEE;
+			}
+			#graphToolControls{
+				font-family: sans-serif;
+				float: right;
+				background-color: #FAFAFA;
 				padding: 10px;
 			}
 		</style>
@@ -42,6 +102,17 @@
 		<h1>All the Algorithms</h1>
 
 		<div id="out"></div>
+		<div id="graphTool">
+			<div id="graphToolControls">
+				<h2>Graph Edit Mode</h2>
+				<input type="radio" name="editMode" id="connect" value="connect" onclick="graphTool.changeEditMode(this.value);" checked />
+				<label for="connect">Connect</label><br />
+				<input type="radio" name="editMode" id="move" value="move" onclick="graphTool.changeEditMode(this.value);" />
+				<label for="move">Move</label><br />
+				<input type="radio" name="editMode" id="delete" value="delete" onclick="graphTool.changeEditMode(this.value);" />
+				<label for="delete">Delete</label><br />
+			</div>
+		</div>
 
 
 		<script type="text/javascript">
@@ -55,6 +126,8 @@
 			var binarySearchTree = new BinarySearchTree();
 			var avlTree = new AVLTree();
 			var redBlackTree = new RedBlackTree();
+			var graph = new Graph();
+			var graphTool = new GraphTool(graph, "graphTool");
 
 			function buildBinaryTree(s){
 				s = s.split("");
