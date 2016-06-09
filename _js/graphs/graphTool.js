@@ -16,9 +16,12 @@ function GraphTool(graph, containerId){
 	render();
 
 	var nameCharCode = 65; //A
-
-	var connectStartNode = null;
+	
 	var editMode = "connect";
+	var connectStartNode = null;
+	var moveStart = null;
+	var screenMoveStart = null;
+	var moving = false;
 
 	canvas.onclick = function(e){
 		var name = String.fromCharCode(nameCharCode++);
@@ -29,7 +32,7 @@ function GraphTool(graph, containerId){
 			,e.offsetY
 		];
 
-		v.clicked = function(e){
+		/*v.clicked = function(e){
 			switch(editMode){
 				case "connect":
 					if(!connectStartNode){
@@ -48,6 +51,66 @@ function GraphTool(graph, containerId){
 					render();
 				break;
 			}
+		}*/
+
+		v.mousedown = function(e){
+			moveStart = [
+				 v.attributes.pos[0]
+				,v.attributes.pos[1]
+			];
+			screenMoveStart = [
+				 e.clientX
+				,e.clientY
+			];
+			window.onmouseup = v.mouseup;
+			window.onmousemove = v.mousemove;
+		}
+
+		v.mouseup = function(e){
+			if(moveStart && screenMoveStart){
+				if(Math.abs(e.clientX - screenMoveStart[0]) > 2 && Math.abs(e.clientY - screenMoveStart[1]) > 2){
+					moving = true;
+				}
+				
+				if(!moving){
+					if(!connectStartNode){
+						connectStartNode = v;
+						connectStartNode.attributes.marked = true;
+						render();
+					} else {
+						if(connectStartNode != v){
+							makeConnection(v);
+						} else {
+							connectStartNode.attributes.marked = false;
+							connectStartNode = null;
+							render();
+						}
+					}
+				}
+			}
+			moveStart = null;
+			screenMoveStart = null;
+			canvas.onmouseup = null;
+			canvas.onmousemove = null;
+			moving = false;
+			render();
+		}
+
+		v.mousemove = function(e){
+			if(moveStart && screenMoveStart){
+				var newX = moveStart[0] + (e.clientX - screenMoveStart[0]);
+				var newY = moveStart[1] + (e.clientY - screenMoveStart[1]);
+				v.div.setAttribute("style", "top: "+newY+"px; left: "+newX+"px;");
+				v.attributes.pos = [
+					 newX
+					,newY
+				];
+				render();
+				
+				if(Math.abs(e.clientX - screenMoveStart[0]) > 2 && Math.abs(e.clientY - screenMoveStart[1]) > 2){
+					moving = true;
+				}
+			}
 		}
 
 		v.div = document.createElement("div");
@@ -55,6 +118,7 @@ function GraphTool(graph, containerId){
 		v.div.setAttribute("style", "top: "+e.offsetY+"px; left: "+e.offsetX+"px;");
 		v.div.innerHTML = name;
 		v.div.onclick = v.clicked;
+		v.div.onmousedown = v.mousedown;
 		container.appendChild(v.div);
 
 		render();
@@ -116,7 +180,7 @@ function GraphTool(graph, containerId){
 	function changeEditMode(newMode){
 		editMode = newMode;
 		if(connectStartNode){
-			connectStartNode.vertex.attributes.marked = false;
+			connectStartNode.attributes.marked = false;
 			connectStartNode = null;
 		}
 		render();
