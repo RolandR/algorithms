@@ -17,11 +17,81 @@ function GraphTool(graph, containerId){
 
 	var nameCharCode = 65; //A
 	
-	var editMode = "connect";
-	var connectStartNode = null;
+	var selectedNode = null;
+	var selectedEdge = null;
 	var moveStart = null;
 	var screenMoveStart = null;
 	var moving = false;
+
+	function selectEdge(e){
+		if(selectedNode){
+			selectedNode.attributes.marked = false;
+			selectedNode = null;
+		}
+
+		if(selectedEdge){
+			selectedEdge.attributes.marked = false;
+			selectedEdge.div.setAttribute("contentEditable", false);
+		}
+		selectedEdge = e;
+		selectedEdge.attributes.marked = true;
+		render();
+	}
+
+	function selectNode(v){
+		if(selectedEdge){
+			selectedEdge.attributes.marked = false;
+			selectedEdge.div.setAttribute("contentEditable", false);
+			selectedEdge = null;
+		}
+
+		if(selectedNode){
+			selectedNode.attributes.marked = false;
+		}
+		selectedNode = v;
+		selectedNode.attributes.marked = true;
+		render();
+	}
+
+	window.onkeydown = function(e){
+		if(e.code == "Delete"){
+			if(selectedNode){
+				
+				var edge = selectedNode.getIncidence().getFirst();
+				while(edge && edge.isElement){
+					var e = edge.getE();
+
+					container.removeChild(e.div);
+					
+					edge = edge.getNext();
+				}
+				
+				selectedNode.remove();
+				container.removeChild(selectedNode.div);
+				selectedNode = null;
+				render();
+			}
+			if(selectedEdge){
+				
+				selectedEdge.remove();
+				container.removeChild(selectedEdge.div);
+				selectedEdge = null;
+				render();
+			}
+		}
+		if(e.code == "Escape"){
+			if(selectedNode){
+				selectedNode.attributes.marked = false;
+				selectedNode = null;
+				render();
+			}
+			if(selectedEdge){
+				selectedEdge.attributes.marked = false;
+				selectedEdge = null;
+				render();
+			}
+		}
+	}
 
 	canvas.onclick = function(e){
 		var name = String.fromCharCode(nameCharCode++);
@@ -31,28 +101,7 @@ function GraphTool(graph, containerId){
 			 e.offsetX
 			,e.offsetY
 		];
-
-		/*v.clicked = function(e){
-			switch(editMode){
-				case "connect":
-					if(!connectStartNode){
-						connectStartNode = v;
-						connectStartNode.attributes.marked = true;
-						render();
-					} else {
-						if(connectStartNode != v){
-							makeConnection(v);
-						}
-					}
-				break;
-				case "delete":
-					v.remove();
-					container.removeChild(v.div);
-					render();
-				break;
-			}
-		}*/
-
+		
 		v.mousedown = function(e){
 			moveStart = [
 				 v.attributes.pos[0]
@@ -73,16 +122,14 @@ function GraphTool(graph, containerId){
 				}
 				
 				if(!moving){
-					if(!connectStartNode){
-						connectStartNode = v;
-						connectStartNode.attributes.marked = true;
-						render();
+					if(!selectedNode){
+						selectNode(v);
 					} else {
-						if(connectStartNode != v){
+						if(selectedNode != v){
 							makeConnection(v);
 						} else {
-							connectStartNode.attributes.marked = false;
-							connectStartNode = null;
+							selectedNode.attributes.marked = false;
+							selectedNode = null;
 							render();
 						}
 					}
@@ -105,6 +152,18 @@ function GraphTool(graph, containerId){
 					 newX
 					,newY
 				];
+
+				var edge = v.getIncidence().getFirst();
+				while(edge && edge.isElement){
+					var e = edge.getE();
+
+					var x = newX + (e.getOther(v).attributes.pos[0] - newX)/2;
+					var y = newY + (e.getOther(v).attributes.pos[1] - newY)/2;
+					e.div.setAttribute("style", "top: "+y+"px; left: "+x+"px;");
+					
+					edge = edge.getNext();
+				}
+				
 				render();
 				
 				if(Math.abs(e.clientX - screenMoveStart[0]) > 2 && Math.abs(e.clientY - screenMoveStart[1]) > 2){
@@ -117,9 +176,12 @@ function GraphTool(graph, containerId){
 		v.div.className = "vertexLabel";
 		v.div.setAttribute("style", "top: "+e.offsetY+"px; left: "+e.offsetX+"px;");
 		v.div.innerHTML = name;
-		v.div.onclick = v.clicked;
 		v.div.onmousedown = v.mousedown;
 		container.appendChild(v.div);
+
+		if(selectedNode){
+			makeConnection(v);
+		}
 
 		render();
 		
@@ -128,10 +190,28 @@ function GraphTool(graph, containerId){
 	function makeConnection(v){
 		
 		var weight = 1;
-		var e = graph.connect(v, connectStartNode, weight);
+		var e = graph.connect(v, selectedNode, weight);
 
-		connectStartNode.attributes.marked = false;
-		connectStartNode = null;
+		e.clicked = function(ev){
+			e.div.setAttribute("contentEditable", true);
+			if(e == selectedEdge){
+				
+			} else {
+				selectEdge(e);
+			}
+		}
+
+		e.div = document.createElement("div");
+		e.div.className = "edgeLabel";
+		var x = v.attributes.pos[0] + (selectedNode.attributes.pos[0] - v.attributes.pos[0])/2;
+		var y = v.attributes.pos[1] + (selectedNode.attributes.pos[1] - v.attributes.pos[1])/2;
+		e.div.setAttribute("style", "top: "+y+"px; left: "+x+"px;");
+		e.div.innerHTML = weight;
+		e.div.onclick = e.clicked;
+		container.appendChild(e.div);
+
+		selectedNode.attributes.marked = false;
+		selectedNode = null;
 		render();
 	}
 
@@ -150,6 +230,12 @@ function GraphTool(graph, containerId){
 			
 			context.strokeStyle = "#555555";
 			context.stroke();
+
+			if(e.attributes.marked){
+				e.div.className = "edgeLabel activeEdge";
+			} else {
+				e.div.className = "edgeLabel";
+			}
 			
 			edge = edge.getNext();
 		}
@@ -158,38 +244,16 @@ function GraphTool(graph, containerId){
 		 
 		while(vertex && vertex.isElement){
 			var v = vertex.getE();
-
-			var radius = 15;
-
-			context.beginPath();
-			context.arc(v.attributes.pos[0], v.attributes.pos[1], radius, 0, 2 * Math.PI);
+			
 			if(v.attributes.marked){
 				v.div.className = "vertexLabel activeVertex";
 			} else {
 				v.div.className = "vertexLabel";
 			}
-			context.fill();
-			context.lineWidth = 1;
-			context.strokeStyle = "#777777";
-			context.stroke();
 			
 			vertex = vertex.getNext();
 		}
 	}
-
-	function changeEditMode(newMode){
-		editMode = newMode;
-		if(connectStartNode){
-			connectStartNode.attributes.marked = false;
-			connectStartNode = null;
-		}
-		render();
-	}
-
-
-	return {
-		changeEditMode: changeEditMode
-	};
 	
 }
 

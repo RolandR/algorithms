@@ -28,9 +28,11 @@ body{
 	user-select: none;           /* Non-prefixed version, currently
 									not supported by any browser */
 }
+
 #graphTool canvas{
 	border: 1px #AAAAAA solid;
 }
+
 #graphTool div.vertexLabel{
 	position: absolute;
 	height: 32px;
@@ -49,15 +51,48 @@ body{
 
 	/*background-color: rgba(0, 255, 0, 0.2);*/
 }
+
 #graphTool div.vertexLabel:hover{
 	background-color: #EEF9FF;
 }
+
 #graphTool div.vertexLabel.activeVertex{
 	background-color: #FFCCCC;
 }
+
 #graphTool div.vertexLabel.activeVertex:hover{
 	background-color: #FFEEEE;
 }
+
+#graphTool div.edgeLabel{
+	position: absolute;
+    height: 18px;
+    width: 32px;
+    margin-top: -7px;
+    margin-left: -15px;
+    cursor: pointer;
+    text-align: center;
+    line-height: 1em;
+    font-size: 16px;
+    font-family: sans-serif;
+    border: 1px #777777 solid;
+    border-radius: 5px;
+    background-color: #FFFFFF;
+}
+
+#graphTool div.edgeLabel:hover{
+	background-color: #EEF9FF;
+}
+
+#graphTool div.edgeLabel.activeEdge{
+	background-color: #FFCCCC;
+}
+
+#graphTool div.edgeLabel.activeEdge:hover{
+	background-color: #FFEEEE;
+}
+
+
 #graphToolControls{
 	font-family: sans-serif;
 	float: right;
