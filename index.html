@@ -27,6 +27,7 @@
 		<script type="text/javascript" src="_js/textProcessing/boyerMoore.js"></script>
 		<script type="text/javascript" src="_js/textProcessing/knuthMorrisPratt.js"></script>
 		<script type="text/javascript" src="_js/textProcessing/standardTrie.js"></script>
+		<script type="text/javascript" src="_js/textProcessing/huffmanTree.js"></script>
 		
 		<script type="text/javascript" src="_js/graphs/graph.js"></script>
 		<script type="text/javascript" src="_js/graphs/graphTool.js"></script>
@@ -66,14 +67,23 @@
 			var redBlackTree = new RedBlackTree();
 			var graph = new Graph();
 			var graphTool = new GraphTool(graph, "graphTool");
-			
 			var standardTrie = new StandardTrie();
+			var huffmanTree = new HuffmanTree();
 
 			function buildStandardTrie(s){
 				s = s.toLowerCase();
 				s = s.split(" ");
 				for(var i in s){
 					standardTrie.insert(s[i]);
+				}
+				standardTrie.print("out");
+				return standardTrie.getAllWords();
+			}
+
+			function buildSuffixTrie(s){
+				s = s.toLowerCase();
+				for(var i in s){
+					standardTrie.insert(s.substring(i));
 				}
 				standardTrie.print("out");
 				return standardTrie.getAllWords();

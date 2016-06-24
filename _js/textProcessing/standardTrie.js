@@ -1,20 +1,29 @@
 /*
 
-=== Binary Search Tree ===
+=== Standard Trie ===
+
+Space: O(n) for
+n = total size of strings
+search, insert, delete: O(dm)
+d = |alphabet|
+m = |string parameter|
+
+when compressed, size is O(s) for number of strings
+
+Compressed Suffix trie uses O(n) space
+and upports arbitrary pattern matching queries in O(dm) time
 
 */
 
 
 function StandardTrie(){
 
-	var root = new Element(null);
-	root.setRoot(true);
+	var root = new Element();
 
 	var length = 0;
 
-	function Element(p){
+	function Element(){
 		var e = "";
-		var parent = p;
 		var children = new PriorityQueue();
 		var isRoot = false;
 		var isExternal = true;
@@ -29,7 +38,7 @@ function StandardTrie(){
 			var node = children.getAt(value);
 			
 			if(!node){
-				node = new Element(this);
+				node = new Element();
 				node.setE(value);
 				children.insert(value, node);
 				isExternal = false;
@@ -45,14 +54,8 @@ function StandardTrie(){
 		return {
 			 getE: function(){return e;}
 			,setE: function(p){e = p;}
-			,getParent: function(){return parent;}
-			,setParent: function(p){parent = p;}
 			,getChildren: function(){return children;}
 			,insert: insert
-			,isLeft: function(){return isLeftChild;}
-			,setIsLeft: function(p){isLeftChild = p;}
-			,getRoot: function(){return isRoot;}
-			,setRoot: function(p){isRoot = p;}
 			,getExternal: function(){return isExternal;}
 			,setExternal: function(p){isExternal = p;}
 		};
@@ -91,100 +94,6 @@ function StandardTrie(){
 			}
 		}
 	}
-
-	/*function search(key){
-		return searchRecursively(root, key);
-	}
-
-	function searchRecursively(node, key){
-		if(node.getExternal()){
-			return null;
-		} else {
-			if(node.getE().getKey() == key){
-				return node;
-			} else if(key < node.getE().getKey()){
-				return searchRecursively(node.getLeft(), key);
-			} else {
-				return searchRecursively(node.getRight(), key);
-			}
-		}
-	}
-
-	function smallestKey(nodes){
-		var smallest = null;
-		for(var i in nodes){
-			if(!nodes[i].getExternal()){
-				if(smallest == null){
-					smallest = nodes[i];
-				} else {
-					if(nodes[i].getE().getKey() < smallest.getE().getKey()){
-						smallest = nodes[i];
-					}
-				}
-			}
-		}
-		return smallest;
-	}
-
-	function remove(key){
-		var node = search(key);
-		if(node){
-			return removeNode(node);
-		}
-		return null;
-	}
-
-	function removeNode(node){
-		
-		if(node.getLeft().getExternal()){
-			return removeAboveExternal(node.getLeft());
-		} else if(node.getRight().getExternal()){
-			return removeAboveExternal(node.getRight());
-		} else {
-
-			var traverseNode = node.getRight();
-			while(!traverseNode.getExternal()){
-				traverseNode = traverseNode.getLeft();
-			}
-
-			swap(node, traverseNode.getParent());
-
-			return removeAboveExternal(traverseNode);
-			
-		}
-		
-	}
-
-	function removeAboveExternal(exNode){
-		
-		var node = exNode.getParent();
-		var parent = node.getParent();
-		var replacement;
-		
-		if(exNode.isLeft()){
-			replacement = node.getRight();
-		} else {
-			replacement = node.getLeft();
-		}
-		
-		replacement.setIsLeft(node.isLeft());
-		replacement.setParent(parent);
-		
-		if(parent){
-			if(node.isLeft()){
-				parent.setLeft(replacement);
-			} else {
-				parent.setRight(replacement);
-			}
-		} else {
-			root = replacement;
-		}
-
-		length--;
-
-		return node;
-		
-	}*/
 
 	function getAllWords(node){
 		if(!node){
