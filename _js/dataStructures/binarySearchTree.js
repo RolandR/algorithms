@@ -274,9 +274,50 @@ function binaryTreeSort(sortString){
 }
 
 
+/*
 
+	Implements Exam question 3
 
+*/
 
+function printHuffman(){
+	// Build tree as in exam question
+
+	var tree = new BinarySearchTree();
+
+	tree.insert(1, "");
+	tree.insert(0, "C");
+	tree.insert(3, "");
+	tree.insert(2, "A");
+	tree.insert(7, "");
+	tree.insert(5, "");
+	tree.insert(8, "B");
+	tree.insert(4, "D");
+	tree.insert(6, "E");
+
+	tree.print("out");
+
+	// now print codes as in solution
+
+	var codes = getCodeTable(tree.getRoot(), "");
+
+	for(var i in codes){
+		console.log(codes[i][1] + ": " + codes[i][0]);
+	}
+
+	return codes;
+}
+
+function getCodeTable(node, pathSoFar){
+	if(node.getE().getValue() != ""){ // "external"
+		return [[pathSoFar, node.getE().getValue()]];
+	}
+	var leftCodes  = getCodeTable(node.getLeft(),  pathSoFar + "0");
+	var rightCodes = getCodeTable(node.getRight(), pathSoFar + "1");
+
+	return leftCodes.concat(rightCodes); // join(left, right)
+	
+}
 
 
 

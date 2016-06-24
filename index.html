@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
+		<link href="./_css/style.css" rel="stylesheet" type="text/css" media="all">
 		
 		<script type="text/javascript" src="_js/aux.js"></script>
 		
@@ -26,25 +27,29 @@
 		<script type="text/javascript" src="_js/textProcessing/boyerMoore.js"></script>
 		<script type="text/javascript" src="_js/textProcessing/knuthMorrisPratt.js"></script>
 		
+		<script type="text/javascript" src="_js/graphs/graph.js"></script>
+		<script type="text/javascript" src="_js/graphs/graphTool.js"></script>
+		
 		<title>
 			All the Algorithms
 		</title>
-		<style>
-			*{
-				margin: 0px;
-				padding: 0px;
-				border: none;
-			}
-			body{
-				font-family: monospace;
-				padding: 10px;
-			}
-		</style>
+
 	</head>
 	<body>
 		<h1>All the Algorithms</h1>
 
 		<div id="out"></div>
+		<div id="graphTool">
+			<div id="graphToolControls">
+				<h2>Graph Edit Mode</h2>
+				<input type="radio" name="editMode" id="connect" value="connect" onclick="graphTool.changeEditMode(this.value);" checked />
+				<label for="connect">Connect</label><br />
+				<input type="radio" name="editMode" id="move" value="move" onclick="graphTool.changeEditMode(this.value);" />
+				<label for="move">Move</label><br />
+				<input type="radio" name="editMode" id="delete" value="delete" onclick="graphTool.changeEditMode(this.value);" />
+				<label for="delete">Delete</label><br />
+			</div>
+		</div>
 
 
 		<script type="text/javascript">
@@ -58,6 +63,8 @@
 			var binarySearchTree = new BinarySearchTree();
 			var avlTree = new AVLTree();
 			var redBlackTree = new RedBlackTree();
+			var graph = new Graph();
+			var graphTool = new GraphTool(graph, "graphTool");
 
 			function buildBinaryTree(s){
 				s = s.split("");
