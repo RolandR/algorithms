@@ -256,12 +256,12 @@ function GraphTool(graph, containerId){
 
 			context.strokeStyle = "#555555";
 			
-			if(e.attributes.explored === false){
+			if(e.attributes.aExplored === false){
 				context.strokeStyle = "#AAAAAA";
-			} else if(e.attributes.explored === true){
-				if(e.attributes.discovery === true){
+			} else if(e.attributes.aExplored === true){
+				if(e.attributes.aDiscovery === true){
 					context.strokeStyle = "#55FF55";
-				} else if(e.attributes.discovery === false){
+				} else if(e.attributes.aDiscovery === false){
 					context.strokeStyle = "#FFBBBB";
 					//context.setL = "#BBBBBB";
 				}
@@ -274,10 +274,14 @@ function GraphTool(graph, containerId){
 				e.div.className += " activeEdge";
 			}
 
-			if(e.attributes.explored === false){
+			if(e.attributes.aExplored === false){
 				e.div.className += " unexplored";
-			} else if(e.attributes.explored === true){
-				e.div.className += " explored";
+			} else if(e.attributes.aExplored === true){
+				if(e.attributes.aDiscovery === true){
+					e.div.className += " discovery";
+				} else if(e.attributes.aDiscovery === false){
+					e.div.className += " back";
+				}
 			}
 			
 			edge = edge.getNext();
@@ -294,9 +298,9 @@ function GraphTool(graph, containerId){
 				v.div.className += " activeVertex";
 			}
 
-			if(v.attributes.explored === false){
+			if(v.attributes.aExplored === false){
 				v.div.className += " unexplored";
-			} else if(v.attributes.explored === true){
+			} else if(v.attributes.aExplored === true){
 				v.div.className += " explored";
 			}
 			
@@ -308,7 +312,7 @@ function GraphTool(graph, containerId){
 	var stepButton = document.getElementById("step");
 	stepButton.onclick = performAction;
 
-	function requestAction(action, arguments){
+	function addAnimationFrame(action, arguments){
 		actions.push([action, arguments]);
 		stepButton.disabled = false;
 	}
@@ -326,6 +330,8 @@ function GraphTool(graph, containerId){
 		if(action){
 			action[0](action[1]);
 		}
+
+		render();
 	}
 
 	function getGraph(){
@@ -339,7 +345,7 @@ function GraphTool(graph, containerId){
 	return {
 		 render: render
 		,getGraph: getGraph
-		,requestAction: requestAction
+		,addAnimationFrame: addAnimationFrame
 		,performAction: performAction
 		,getSelectedVertex: getSelectedVertex
 	};

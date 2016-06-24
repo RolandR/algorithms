@@ -23,39 +23,65 @@ function depthFirstSearch(graphTool){
 
 	graphTool.render();
 
-	var startVertex = graphTool.getSelectedVertex();
-
-	if(startVertex){
-		graphTool.requestAction(doDFS, [startVertex]);
-	}
-
-	function doDFS(args){
-
-		console.log("foo!");
-		
-		vertex = args[0];
-		
-		vertex.attributes.explored = true;
-
-		var edge = vertex.getIncidence().getFirst();
-		while(edge && edge.isElement){
-			var e = edge.getE();
-
-			var other = e.getOther(vertex);
-
-			if(other.attributes.explored == false){
-				e.attributes.explored = true;
-				e.attributes.discovery = true;
-				graphTool.requestAction(doDFS, [other]);
-			} else {
-				e.attributes.explored = true;
-				e.attributes.discovery = false;
-			}
+	var vertex = graph.getVertexList().getFirst();
+	while(vertex && vertex.isElement){
+		var v = vertex.getE();
+		if(v.attributes.explored === false){
+			graphTool.addAnimationFrame(function(a){
+				var v = a[0];
+				v.attributes.aExplored = v.attributes.explored;
+			}, [v]);
 			
-			edge = edge.getNext();
+			doDFS(v);
 		}
+		vertex = vertex.getNext();
+	}
+	
+	function doDFS(vertex){
 
-		graphTool.render();
+		if(vertex.attributes.explored === false){
+			
+			vertex.attributes.explored = true;
+
+			var edge = vertex.getIncidence().getFirst();
+			
+			while(edge && edge.isElement){
+				
+				var e = edge.getE();
+
+				if(e.attributes.explored === false){
+					var other = e.getOther(vertex);
+					
+					if(other.attributes.explored == false){
+						e.attributes.explored = true;
+						e.attributes.discovery = true;
+
+						graphTool.addAnimationFrame(function(a){
+							var e = a[0];
+							e.attributes.aExplored = e.attributes.explored;
+							e.attributes.aDiscovery = e.attributes.discovery;
+							var v = a[1];
+							v.attributes.aExplored = v.attributes.explored;
+						}, [e, other]);
+						
+						doDFS(other);
+					} else {
+						e.attributes.explored = true;
+						e.attributes.discovery = false;
+
+						graphTool.addAnimationFrame(function(a){
+							var e = a[0];
+							e.attributes.aExplored = e.attributes.explored;
+							e.attributes.aDiscovery = e.attributes.discovery;
+							var v = a[1];
+							v.attributes.aExplored = v.attributes.explored;
+						}, [e, other]);
+					}
+				}
+				
+				edge = edge.getNext();
+			}
+		}
 	}
 	
 	

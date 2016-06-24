@@ -104,8 +104,12 @@ body{
 	background-color: #EEEEEE;
 }
 
-#graphTool div.edgeLabel.explored{
+#graphTool div.edgeLabel.discovery{
 	background-color: #EEFFEE;
+}
+
+#graphTool div.edgeLabel.back{
+	background-color: #EEEEEE;
 }
 
 #graphToolControls{
