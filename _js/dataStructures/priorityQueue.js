@@ -74,6 +74,23 @@ function PriorityQueue(){
 		length++;
 	}
 
+	function getAt(key){		
+		var node = first;
+		
+		while(node){
+			if(node.getE().getKey() == key){
+				return node.getE().getValue();
+			}
+			node = node.getNext();
+		}
+
+		return null;
+	}
+
+	function peek(){
+		return first;
+	}
+
 	function remove(){
 		if(length > 0){
 			var e = first.getE();
@@ -104,6 +121,8 @@ function PriorityQueue(){
 
 	return {
 		 insert: insert
+		,peek: peek
+		,getAt: getAt
 		,remove: remove
 		,print: print
 	};
