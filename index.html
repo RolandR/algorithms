@@ -31,6 +31,7 @@
 		
 		<script type="text/javascript" src="_js/graphs/graph.js"></script>
 		<script type="text/javascript" src="_js/graphs/graphTool.js"></script>
+		<script type="text/javascript" src="_js/graphs/depthFirstSearch.js"></script>
 		
 		<title>
 			All the Algorithms
@@ -43,13 +44,9 @@
 		<div id="out"></div>
 		<div id="graphTool">
 			<div id="graphToolControls">
-				<h2>Graph Edit Mode</h2>
-				<input type="radio" name="editMode" id="connect" value="connect" onclick="graphTool.changeEditMode(this.value);" checked />
-				<label for="connect">Connect</label><br />
-				<input type="radio" name="editMode" id="move" value="move" onclick="graphTool.changeEditMode(this.value);" />
-				<label for="move">Move</label><br />
-				<input type="radio" name="editMode" id="delete" value="delete" onclick="graphTool.changeEditMode(this.value);" />
-				<label for="delete">Delete</label><br />
+				<h2>Graph Tools</h2>
+				<button id="dfs" onclick="depthFirstSearch(graphTool);">DFS</button>
+				<button id="step" disabled="true">Step</button>
 			</div>
 		</div>
 

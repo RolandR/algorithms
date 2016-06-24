@@ -60,6 +60,14 @@ body{
 	background-color: #FFCCCC;
 }
 
+#graphTool div.vertexLabel.unexplored{
+	background-color: #DDDDDD;
+}
+
+#graphTool div.vertexLabel.explored{
+	background-color: #EEFFEE;
+}
+
 #graphTool div.vertexLabel.activeVertex:hover{
 	background-color: #FFEEEE;
 }
@@ -92,6 +100,13 @@ body{
 	background-color: #FFEEEE;
 }
 
+#graphTool div.edgeLabel.unexplored{
+	background-color: #EEEEEE;
+}
+
+#graphTool div.edgeLabel.explored{
+	background-color: #EEFFEE;
+}
 
 #graphToolControls{
 	font-family: sans-serif;
@@ -99,3 +114,71 @@ body{
 	background-color: #FAFAFA;
 	padding: 10px;
 }
+
+button{	
+	background: none;
+	background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.4), rgba(180, 180, 180, 0.3));
+	border: 1px #AAAAAA outset;
+	color: #000000;
+	cursor: pointer;
+	padding: 3px;
+	height: 23px;
+	width: 100px;
+	display: block;
+	margin-top: 10px;
+}
+
+button:disabled{
+	color: #666666;
+	border: 1px #EEEEEE outset;
+	background-image: linear-gradient(to bottom, rgba(180, 180, 180, 0.3), rgba(180, 180, 180, 0.3));
+}
+
+button:disabled:hover{
+	border: 1px #EEEEEE outset;
+	background-image: linear-gradient(to bottom, rgba(180, 180, 180, 0.3), rgba(180, 180, 180, 0.3));
+	cursor: default;
+}
+
+button:hover{
+	background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.6), rgba(180, 180, 180, 0.5));
+	border: 1px rgba(0, 0, 0, 0.6) outset;
+}
+
+button:active{
+	background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.6), rgba(180, 180, 180, 0.8));
+	border: 1px rgba(0, 0, 0, 0.8) outset;
+	outline: none;
+}
+
+button:focus{
+	outline: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -201,6 +201,30 @@ function GraphTool(graph, containerId){
 			}
 		}
 
+		e.edit = function(ev){
+			switch(ev.code){
+				case "Delete":
+					ev.stopPropagation();
+				break;
+				case "Escape":
+					e.div.setAttribute("contentEditable", false);
+					e.div.innerHTML = e.getWeight();
+				break;
+				case "Enter":
+					ev.preventDefault();
+					e.div.setAttribute("contentEditable", false);
+
+					var newValue = e.div.innerHTML;
+					newValue = parseFloat(newValue);
+					if(isNaN(newValue)){
+						newValue = e.getWeight();
+					}
+					e.div.innerHTML = newValue;
+					e.setWeight(newValue);
+				break;
+			}
+		}
+
 		e.div = document.createElement("div");
 		e.div.className = "edgeLabel";
 		var x = v.attributes.pos[0] + (selectedNode.attributes.pos[0] - v.attributes.pos[0])/2;
@@ -208,6 +232,8 @@ function GraphTool(graph, containerId){
 		e.div.setAttribute("style", "top: "+y+"px; left: "+x+"px;");
 		e.div.innerHTML = weight;
 		e.div.onclick = e.clicked;
+		e.div.onkeydown = e.edit;
+		e.div.onkeyup = e.edit;
 		container.appendChild(e.div);
 
 		selectedNode.attributes.marked = false;
@@ -227,14 +253,31 @@ function GraphTool(graph, containerId){
 			context.beginPath();
 			context.moveTo(e.getA().attributes.pos[0]+0.5, e.getA().attributes.pos[1]+0.5);
 			context.lineTo(e.getB().attributes.pos[0]+0.5, e.getB().attributes.pos[1]+0.5);
-			
+
 			context.strokeStyle = "#555555";
+			
+			if(e.attributes.explored === false){
+				context.strokeStyle = "#AAAAAA";
+			} else if(e.attributes.explored === true){
+				if(e.attributes.discovery === true){
+					context.strokeStyle = "#55FF55";
+				} else if(e.attributes.discovery === false){
+					context.strokeStyle = "#FFBBBB";
+					//context.setL = "#BBBBBB";
+				}
+			}
 			context.stroke();
 
+			e.div.className = "edgeLabel";
+			
 			if(e.attributes.marked){
-				e.div.className = "edgeLabel activeEdge";
-			} else {
-				e.div.className = "edgeLabel";
+				e.div.className += " activeEdge";
+			}
+
+			if(e.attributes.explored === false){
+				e.div.className += " unexplored";
+			} else if(e.attributes.explored === true){
+				e.div.className += " explored";
 			}
 			
 			edge = edge.getNext();
@@ -244,16 +287,62 @@ function GraphTool(graph, containerId){
 		 
 		while(vertex && vertex.isElement){
 			var v = vertex.getE();
+
+			v.div.className = "vertexLabel";
 			
 			if(v.attributes.marked){
-				v.div.className = "vertexLabel activeVertex";
-			} else {
-				v.div.className = "vertexLabel";
+				v.div.className += " activeVertex";
+			}
+
+			if(v.attributes.explored === false){
+				v.div.className += " unexplored";
+			} else if(v.attributes.explored === true){
+				v.div.className += " explored";
 			}
 			
 			vertex = vertex.getNext();
 		}
 	}
+
+	var actions = [];
+	var stepButton = document.getElementById("step");
+	stepButton.onclick = performAction;
+
+	function requestAction(action, arguments){
+		actions.push([action, arguments]);
+		stepButton.disabled = false;
+	}
+
+	function performAction(){
+
+		console.log(actions);
+		
+		var action = actions.shift();
+
+		if(actions.length <= 0){
+			stepButton.disabled = true;
+		}
+
+		if(action){
+			action[0](action[1]);
+		}
+	}
+
+	function getGraph(){
+		return graph;
+	}
+
+	function getSelectedVertex(){
+		return selectedNode;
+	}
+
+	return {
+		 render: render
+		,getGraph: getGraph
+		,requestAction: requestAction
+		,performAction: performAction
+		,getSelectedVertex: getSelectedVertex
+	};
 	
 }
 
