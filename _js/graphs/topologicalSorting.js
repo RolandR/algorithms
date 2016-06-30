@@ -5,7 +5,7 @@
 	runs in O(n+m) using adjacency list
 	
 */
-function depthFirstSearch(graphTool, onlySelected){
+function topologicalSorting(graphTool, onlySelected){
 
 	var selectedVertex = graphTool.getSelectedVertex();
 	
@@ -16,6 +16,8 @@ function depthFirstSearch(graphTool, onlySelected){
 	graphTool.resetAttributes();
 
 	var graph = graphTool.getGraph();
+
+	var n = graph.getVertexCount();
 
 	var vertex = graph.getVertexList().getFirst();
 	while(vertex && vertex.isElement){
@@ -35,12 +37,12 @@ function depthFirstSearch(graphTool, onlySelected){
 
 	graphTool.render();
 
-	var current;
+	var path = [];
 
 	if(selectedVertex){
 		var v = selectedVertex;
-		
-		doDFS(v);
+		path.push(v);
+		topoSort(v);
 		
 	}
 
@@ -50,25 +52,18 @@ function depthFirstSearch(graphTool, onlySelected){
 		while(vertex && vertex.isElement){
 			var v = vertex.getE();
 			if(v.attributes.explored === false){
-				
-				if(current != v){
-					current = v;
-					graphTool.addAnimationFrame(function(a){
-						var v = a[0];
-						graphTool.highlightNode(v);
-						v.attributes.aExplored = v.attributes.explored;
-					}, [v]);
-				}
-					
-				doDFS(v);
+				path.push(v);
+				topoSort(v);
 			}
 			vertex = vertex.getNext();
 		}
 	}
 	
-	function doDFS(vertex){
+	function topoSort(vertex){
 
 		if(vertex.attributes.explored === false){
+
+			path.push(vertex);
 			
 			vertex.attributes.explored = true;
 
@@ -79,15 +74,6 @@ function depthFirstSearch(graphTool, onlySelected){
 				var e = edge.getE();
 
 				if(e.attributes.explored === false && e.comesFrom(vertex)){
-
-					if(current != vertex){
-						current = vertex;
-						graphTool.addAnimationFrame(function(a){
-							var v = a[0];
-							graphTool.highlightNode(v);
-							v.attributes.aExplored = v.attributes.explored;
-						}, [vertex]);
-					}
 					
 					var other = e.getOther(vertex);
 					
@@ -95,34 +81,38 @@ function depthFirstSearch(graphTool, onlySelected){
 						e.attributes.explored = true;
 						e.attributes.discovery = true;
 
-						graphTool.addAnimationFrame(function(a){
-							var e = a[0];
-							e.attributes.aExplored = e.attributes.explored;
-							e.attributes.aDiscovery = e.attributes.discovery;
-							var v = a[1];
-							v.attributes.aExplored = v.attributes.explored;
-						}, [e, other]);
+						path.push(vertex);
+						path.push(e);
 						
-						doDFS(other);
+						topoSort(other);
 					} else {
 						e.attributes.explored = true;
 						e.attributes.discovery = false;
-
-						graphTool.addAnimationFrame(function(a){
-							var e = a[0];
-							e.attributes.aExplored = e.attributes.explored;
-							e.attributes.aDiscovery = e.attributes.discovery;
-							var v = a[1];
-							v.attributes.aExplored = v.attributes.explored;
-						}, [e, other]);
 					}
 				}
 				
 				edge = edge.getNext();
 			}
+
+			vertex.attributes.number = n;
+			n--;
+			graphTool.addAnimationFrame(function(a){
+				var v = a[0];
+				v.attributes.label = v.attributes.number;
+				var path = a[1];
+				if(path[0]){
+					graphTool.highlightNode(path[0]);
+				}
+				for(var i in path){
+					path[i].attributes.aExplored = path[i].attributes.explored;
+					path[i].attributes.aDiscovery = path[i].attributes.discovery;
+				}
+			}, [vertex, Array.from(path)]);
+			path = [];
 		}
 	}
 	
 	
 }
+
 

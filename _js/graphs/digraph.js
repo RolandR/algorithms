@@ -1,11 +1,9 @@
 
 /*
-	Graph using adjacency list
+	Directed Graph using adjacency list
 */
 
-function Graph(d){
-
-	var directed = d;
+function Digraph(){
 
 	function Vertex(n){
 		var name = n;
@@ -41,18 +39,6 @@ function Graph(d){
 			return false;
 		}
 
-		function hasIncomingFrom(vertex){
-			var incident = incidence.getFirst();
-			while(incident && incident.isElement){
-				var edge = incident.getE();
-				if(edge.comesFrom(vertex)){
-					return edge;
-				}
-				incident = incident.getNext();
-			}
-			return false;
-		}
-
 		function connectTo(vertex, weight){
 			
 			if(this.isConnectedTo(vertex)){
@@ -63,10 +49,6 @@ function Graph(d){
 			edge.setIncidencePositions([this.registerEdge(edge), vertex.registerEdge(edge)]);
 			
 			edge.setListPos(edgeList.insertFirst(edge));
-
-			if(directed && this.hasIncomingFrom(vertex)){
-				edge.setDirectedOnly(true);
-			}
 			return edge;
 		}
 
@@ -85,7 +67,6 @@ function Graph(d){
 			,setListPos: function(p){listPos = p;}
 			,connectTo: connectTo
 			,isConnectedTo: isConnectedTo
-			,hasIncomingFrom: hasIncomingFrom
 			,registerEdge: registerEdge
 			,attributes: attributes
 		};
@@ -96,7 +77,6 @@ function Graph(d){
 		var ends = [a, b];
 		var listPos = null;
 		var incidencePositions = null;
-		var directedOnly = false;
 
 		var attributes = {};
 
@@ -118,18 +98,10 @@ function Graph(d){
 				return (ends[0] == vertex || ends[1] == vertex);
 			}
 			,pointsTo: function(vertex){
-				if(directed){
-					return (ends[1] == vertex);
-				} else {
-					return this.isConnectedTo(vertex);
-				}
+				return (ends[1] == vertex);
 			}
 			,comesFrom: function(vertex){
-				if(directed){
-					return (ends[0] == vertex);
-				} else {
-					return this.isConnectedTo(vertex);
-				}
+				return (ends[0] == vertex);
 			}
 			,getOther: function(vertex){
 				if(ends[0] == vertex){
@@ -138,11 +110,13 @@ function Graph(d){
 					return ends[0];
 				}
 			}
+			,getEnd: function(){return ends[1];}
+			,setEnd: function(p){ends[1] = p;}
+			,getStart: function(){return ends[0];}
+			,setStart: function(p){ends[0] = p;}
 			,remove: remove
 			,getListPos: function(){return listPos;}
 			,setListPos: function(p){listPos = p;}
-			,isDirectedOnly: function(){return directedOnly;}
-			,setDirectedOnly: function(p){directedOnly = p;}
 			,attributes: attributes
 			,getA: function(){return ends[0];}
 			,getB: function(){return ends[1];}
@@ -169,8 +143,7 @@ function Graph(d){
 	}
 
 	return {
-		 isDirected: function(){return directed}
-		,makeDirected: function(d){directed = d;}
+		 isDirected: function(){return true;}
 		,insertVertex: insertVertex
 		,connect: connect
 		,getVertexCount: function(){return vertexCount;}

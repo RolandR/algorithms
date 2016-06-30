@@ -30,8 +30,13 @@
 		<script type="text/javascript" src="_js/textProcessing/huffmanTree.js"></script>
 		
 		<script type="text/javascript" src="_js/graphs/graph.js"></script>
+		<script type="text/javascript" src="_js/graphs/digraph.js"></script>
 		<script type="text/javascript" src="_js/graphs/graphTool.js"></script>
 		<script type="text/javascript" src="_js/graphs/depthFirstSearch.js"></script>
+		<script type="text/javascript" src="_js/graphs/breadthFirstSearch.js"></script>
+		<script type="text/javascript" src="_js/graphs/hasStrongConnectivity.js"></script>
+		<script type="text/javascript" src="_js/graphs/floydWarshall.js"></script>
+		<script type="text/javascript" src="_js/graphs/topologicalSorting.js"></script>
 		
 		<title>
 			All the Algorithms
@@ -43,10 +48,43 @@
 
 		<div id="out"></div>
 		<div id="graphTool">
-			<div id="graphToolControls">
-				<h2>Graph Tools</h2>
-				<button id="dfs" onclick="depthFirstSearch(graphTool);">DFS</button>
+		</div>
+		<div id="graphToolControls">
+			<h2 id="graphToolTitle">Undirected Graph</h2>
+			<button id="toggleDirectedButton" onclick="graphTool.toggleDirected();">Make Directed</button>
+			<button onclick="graphTool = new GraphTool(new Graph(), 'graphTool');">Reset</button>
+			<div id="exportImport">
+				<div id="exportContainer"><input id="exportField" type="text" /></div>
+				<div id="importContainer"><input id="importField" type="text" /></div>
+				<button id="exportButton">Export</button>
+				<button id="importButton" onclick="graphToolImport()">Import</button>
+			</div>
+			<select id="examplesSelect" onclick="graphExampleSelect(this)">
+				<option selected value="">Load example...</option>
+				<option value="WzEsMSxbWyJJIiwyNDAsMzMzXSxbIkgiLDQyNiwzMzhdLFsiRyIsMzI0LDE5NF0sWyJGIiw0MTQsNTk0XSxbIkUiLDUwNCw0ODFdLFsiRCIsMTYxLDQ4NV0sWyJDIiwyMjYsNjA4XSxbIkIiLDU4MCw2MDddLFsiQSIsMzQzLDQ5MF1dLFtbIkQiLCJDIiwxLDBdLFsiSSIsIkQiLDEsMF0sWyJFIiwiRiIsMSwwXSxbIkciLCJIIiwxLDBdLFsiRSIsIkIiLDEsMF0sWyJHIiwiSSIsMSwwXSxbIkgiLCJBIiwxLDBdLFsiSCIsIkUiLDEsMF1dXQ==">Tree</option>
+			</select>
+			<hr />
+			<h3>Algorithms</h3>
+			<div>
+				<button onclick="depthFirstSearch(graphTool);">DFS</button>
+				<button onclick="depthFirstSearch(graphTool, true);">(only selected)</button>
+			</div>
+			<div>
+				<button onclick="breadthFirstSearch(graphTool);">BFS</button>
+				<button onclick="breadthFirstSearch(graphTool, true);">(only selected)</button>
+			</div>
+			<button onclick="hasStrongConnectivity(graphTool);">Strong Connectivity</button>
+			<button onclick="floydWarshall(graphTool);">Floyd-Warshall</button>
+			<div>
+				<button onclick="topologicalSorting(graphTool);">Topo Sort</button>
+				<button onclick="topologicalSorting(graphTool, true);">(only selected)</button>
+			</div>
+			<hr />
+			<h3>Animation</h3>
+			<div>
 				<button id="step" disabled="true">Step</button>
+				<button id="skip" disabled="true">Skip</button>
+				<button id="reset" onclick="graphTool.resetAttributes();">Reset</button>
 			</div>
 		</div>
 
@@ -63,6 +101,7 @@
 			var avlTree = new AVLTree();
 			var redBlackTree = new RedBlackTree();
 			var graph = new Graph();
+			var digraph = new Digraph();
 			var graphTool = new GraphTool(graph, "graphTool");
 			var standardTrie = new StandardTrie();
 			var huffmanTree = new HuffmanTree();
