@@ -88,6 +88,7 @@ function Graph(d){
 			,hasIncomingFrom: hasIncomingFrom
 			,registerEdge: registerEdge
 			,attributes: attributes
+			,toString: function(){return name;}
 		};
 	}
 

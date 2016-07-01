@@ -37,6 +37,8 @@
 		<script type="text/javascript" src="_js/graphs/hasStrongConnectivity.js"></script>
 		<script type="text/javascript" src="_js/graphs/floydWarshall.js"></script>
 		<script type="text/javascript" src="_js/graphs/topologicalSorting.js"></script>
+		<script type="text/javascript" src="_js/graphs/dijkstra.js"></script>
+		<script type="text/javascript" src="_js/graphs/bellmanFord.js"></script>
 		
 		<title>
 			All the Algorithms
@@ -62,6 +64,9 @@
 			<select id="examplesSelect" onclick="graphExampleSelect(this)">
 				<option selected value="">Load example...</option>
 				<option value="WzEsMSxbWyJJIiwyNDAsMzMzXSxbIkgiLDQyNiwzMzhdLFsiRyIsMzI0LDE5NF0sWyJGIiw0MTQsNTk0XSxbIkUiLDUwNCw0ODFdLFsiRCIsMTYxLDQ4NV0sWyJDIiwyMjYsNjA4XSxbIkIiLDU4MCw2MDddLFsiQSIsMzQzLDQ5MF1dLFtbIkQiLCJDIiwxLDBdLFsiSSIsIkQiLDEsMF0sWyJFIiwiRiIsMSwwXSxbIkciLCJIIiwxLDBdLFsiRSIsIkIiLDEsMF0sWyJHIiwiSSIsMSwwXSxbIkgiLCJBIiwxLDBdLFsiSCIsIkUiLDEsMF1dXQ==">Tree</option>
+				<option value="WzEsMSxbWyJBIiwzMDAsMjc1XSxbIkIiLDU1LDIyNV0sWyJDIiw0ODUsMzYwXSxbIkQiLDQyNyw1NjRdLFsiRSIsMzE3LDQyMl0sWyJGIiwyMDgsMzM4XSxbIkciLDcxLDQ1OF0sWyJIIiw0NjUsMTQyXSxbIkkiLDIwNyw2N11dLFtbIkUiLCJEIiwxLDBdLFsiQiIsIkEiLDEsMF0sWyJJIiwiQSIsMSwwXSxbIkgiLCJBIiwxLDBdLFsiQSIsIkMiLDEsMF0sWyJJIiwiQiIsMSwwXSxbIkMiLCJEIiwxLDBdLFsiQyIsIkUiLDEsMF0sWyJIIiwiQyIsMSwwXSxbIkYiLCJFIiwxLDBdLFsiQiIsIkciLDEsMF0sWyJHIiwiRCIsMSwwXSxbIkIiLCJGIiwxLDBdXV0=">Directed Acyclic</option>
+				<option value="WzEsMCxbWyJGIiwzNDYsMzY3XSxbIkUiLDE1NSwzNzNdLFsiRCIsNDI4LDIyNV0sWyJDIiwyNDAsMjI1XSxbIkIiLDYwLDIyNF0sWyJBIiwyMzksNzhdXSxbWyJDIiwiQiIsNywwXSxbIkMiLCJEIiwxLDBdLFsiQSIsIkMiLDIsMF0sWyJEIiwiQSIsNCwwXSxbIkYiLCJEIiw1LDBdLFsiQyIsIkYiLDksMF0sWyJFIiwiQyIsMywwXSxbIkIiLCJFIiwyLDBdLFsiQSIsIkIiLDgsMF1dXQ==">Weighted Undirected</option>
+				<option value="WzEsMSxbWyJBIiwyMzksNzhdLFsiQiIsNjAsMjI0XSxbIkMiLDI0MCwyMjVdLFsiRCIsNDI4LDIyNV0sWyJFIiwxNTUsMzczXSxbIkYiLDM0NiwzNjddXSxbWyJGIiwiQyIsOSwwXSxbIkQiLCJGIiw1LDBdLFsiQyIsIkUiLDMsMF0sWyJBIiwiRCIsNCwwXSxbIkEiLCJCIiw4LDBdLFsiQiIsIkUiLC0yLDBdLFsiQSIsIkMiLC0yLDBdLFsiQyIsIkQiLDEsMF0sWyJDIiwiQiIsNywwXV1d">Weighted Directed with negative</option>
 			</select>
 			<hr />
 			<h3>Algorithms</h3>
@@ -79,6 +84,8 @@
 				<button onclick="topologicalSorting(graphTool);">Topo Sort</button>
 				<button onclick="topologicalSorting(graphTool, true);">(only selected)</button>
 			</div>
+			<button onclick="dijkstra(graphTool);">Dijkstra</button>
+			<button onclick="bellmanFord(graphTool);">Bellman-Ford</button>
 			<hr />
 			<h3>Animation</h3>
 			<div>

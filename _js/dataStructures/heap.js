@@ -14,6 +14,7 @@ function Heap(){
 	var freeNodes = new SinglyLinkedList();
 	freeNodes.insert(root);
 	var newNodes = new SinglyLinkedList();
+	var pairs = [];
 
 	function Element(p){
 		var e = null;
@@ -36,13 +37,32 @@ function Heap(){
 		};
 	}
 
-	function Pair(k, v){
+	function Pair(k, v, n){
 		var key = k;
 		var value = v;
+		var node = n;
+
+		function updateKey(k, foo){			
+			key = k;
+			
+			if(node.getParent()){
+				if(key < node.getParent().getE().getKey()){
+					upheap(node);
+				} else {
+					downheap(node);
+				}
+			} else {
+				downheap(node);
+			}
+		}
 
 		return {
 			 getKey: function(){return key;}
+			,updateKey: updateKey
 			,getValue: function(){return value;}
+			,setValue: function(p){value = p;}
+			,getNode: function(){return node;}
+			,setNode: function(p){node = p;}
 		};
 	}
 
@@ -50,25 +70,16 @@ function Heap(){
 		var aContent = a.getE();
 		a.setE(b.getE());
 		b.setE(aContent);
-	}
-
-	function upheap(node){
-		if(node.getParent()){
-			if(node.getE().getKey() < node.getParent().getE().getKey()){
-				swap(node, node.getParent());
-				upheap(node.getParent());
-			} else {
-				return true;
-			}
-		} else {
-			return true;
-		}
+		
+		a.getE().setNode(a);
+		b.getE().setNode(b);
 	}
 
 	function insert(key, value){
-		var pair = new Pair(key, value);
-
+		
 		var node = freeNodes.remove();
+		var pair = pairs.push(new Pair(key, value, node));
+		pair = pairs[pair-1];
 
 		node.setExternal(false);
 		node.setE(pair);
@@ -79,39 +90,49 @@ function Heap(){
 		
 		newNodes.insertFirst(node);
 
-		upheap(node);
-
 		length++;
+
+		return upheap(node);
 	}
 
 	function smallestKey(nodes){
 		var smallest = null;
 		for(var i in nodes){
-			if(!nodes[i].getExternal()){
-				if(smallest == null){
+			if(smallest == null){
+				smallest = nodes[i];
+			} else if(!nodes[i].getExternal()){
+				if(nodes[i].getE().getKey() < smallest.getE().getKey()){
 					smallest = nodes[i];
-				} else {
-					if(nodes[i].getE().getKey() < smallest.getE().getKey()){
-						smallest = nodes[i];
-					}
 				}
 			}
 		}
 		return smallest;
 	}
 
+	function upheap(node){
+		if(node.getParent()){
+			if(node.getE().getKey() < node.getParent().getE().getKey()){
+				swap(node, node.getParent());
+				return upheap(node.getParent());
+			} else {
+				return node;
+			}
+		} else {
+			return node;
+		}
+	}
+
 	function downheap(node){
 		
 		var smallest = smallestKey([node, node.getRight(), node.getLeft()]);
 		if(smallest == node){
-			return true;
+			return node;
 		} else {
 			swap(node, smallest);
-			downheap(smallest);
-			return true;
+			return downheap(smallest);
 		}
 		
-		return true;
+		return node;
 		
 	}
 
@@ -120,9 +141,11 @@ function Heap(){
 		
 		if(length > 0){
 			var e = root.getE();
+			e.setNode(null);
 			var last = newNodes.remove();
 			swap(root, last);
 			last.setExternal(true);
+			last.setE(null);
 			freeNodes.insertFirst(last);
 			length--;
 			if(length > 0){
@@ -146,7 +169,7 @@ function Heap(){
 		outString += out;
 
 		if(elementId){
-			document.getElementById(elementId).innerHTML = outString;
+			document.getElementById(elementId).innerHTML += outString;
 		}
 		
 		return outString;

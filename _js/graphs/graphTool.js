@@ -7,6 +7,14 @@ function GraphTool(graph, containerId){
 	var canvas = document.createElement("canvas");
 	var context = canvas.getContext("2d");
 
+	if(graph.isDirected()){
+		document.getElementById("toggleDirectedButton").innerHTML = "Make Undirected";
+		document.getElementById("graphToolTitle").innerHTML = "Directed Graph";
+	} else {
+		document.getElementById("toggleDirectedButton").innerHTML = "Make Directed";
+		document.getElementById("graphToolTitle").innerHTML = "Undirected Graph";
+	}
+
 	container.innerHTML = "";
 	context.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -190,7 +198,7 @@ function GraphTool(graph, containerId){
 
 					var aspect = 2;
 					if(graph.isDirected()){
-						var aspect = 4;
+						var aspect = 3;
 					}
 					var x = b.pos[0] + (a.pos[0] - b.pos[0])/aspect;
 					var y = b.pos[1] + (a.pos[1] - b.pos[1])/aspect;
@@ -420,7 +428,7 @@ function GraphTool(graph, containerId){
 
 			var aspect = 2;
 			if(graph.isDirected()){
-				var aspect = 4;
+				var aspect = 3;
 			}
 			var x = b.pos[0] + (a.pos[0] - b.pos[0])/aspect;
 			var y = b.pos[1] + (a.pos[1] - b.pos[1])/aspect;
@@ -649,7 +657,6 @@ function GraphTool(graph, containerId){
 	}
 
 	function highlightNode(v){
-		console.log(v);
 		if(highlightedNode){
 			highlightedNode.attributes.highlighted = false;
 		}
