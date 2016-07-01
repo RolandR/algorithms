@@ -1,11 +1,12 @@
 
 /*
-	Floyd-Warshall's Algorithm for transitive closure
+	Finds all shortest paths between all pairs of vertices
+	Similar to Floyd-Warshall's Algorithm
 
 	Runs in O(n^3) assuming areAdjacent is O(1) (Adjacency matrix)
 */
 
-function floydWarshall(graphTool){
+function allShortestPairs(graphTool){
 	
 	graphTool.resetAttributes();
 
@@ -29,10 +30,14 @@ function floydWarshall(graphTool){
 		var e = edge.getE();
 		e.attributes.explored = false;
 		e.attributes.aExplored = false;
+		e.attributes.label = e.getWeight();
+		e.attributes.w = e.getWeight();
 		edge = edge.getNext();
 	}
 
 	graphTool.render();
+
+	var newBetterDistances = [];
 
 	var kVertex = graph.getVertexList().getFirst();
 	while(kVertex && kVertex.isElement){
@@ -53,11 +58,18 @@ function floydWarshall(graphTool){
 				var j = jVertex.getE();
 				if(j != i && j != k){
 
-					if(i.isConnectedTo(k) && k.isConnectedTo(j)){
-						var newEdge = graph.connect(i, j, 2);
-						if(newEdge){
+					var ik = i.isConnectedTo(k);
+					var kj = k.isConnectedTo(j);
+					var ij = i.isConnectedTo(j);
+					
+					if(ik && kj){
+						
+						if(!ij){
+							
+							var newEdge = graph.connect(i, j, ik.attributes.w + kj.attributes.w);
 							newEdge.attributes.temporary = true;
 							newEdge.attributes.invisible = true;
+							newEdge.attributes.w = newEdge.getWeight();
 
 							graphTool.registerEdge(newEdge);
 							
@@ -65,6 +77,13 @@ function floydWarshall(graphTool){
 								var e = a[0];
 								e.attributes.invisible = false;
 							}, [newEdge]);
+							
+						} else {
+							
+							if(ij.attributes.w > ik.attributes.w + kj.attributes.w){
+								ij.attributes.w = (ik.attributes.w + kj.attributes.w);
+								newBetterDistances.push([ij, ij.attributes.w]);
+							}
 							
 						}
 					}
@@ -76,10 +95,52 @@ function floydWarshall(graphTool){
 			}
 			iVertex = iVertex.getNext();
 		}
+
+		if(newBetterDistances.length > 0){
+			graphTool.addAnimationFrame(function(a){
+				var arr = a[0];
+				for(var i in arr){
+					arr[i][0].attributes.label = arr[i][1];
+				}
+			}, [Array.from(newBetterDistances)]);
+			newBetterDistances = [];
+		}
 		
 		kVertex = kVertex.getNext();
 	}
 
 	graphTool.render();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

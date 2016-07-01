@@ -373,6 +373,14 @@ function GraphTool(graph, containerId){
 				if(e.attributes.invisible === true){
 					e.div.className += " invisible";
 				}
+
+				e.div.innerHTML = e.getWeight();
+
+				if(e.attributes.label){
+					e.div.innerHTML = e.attributes.label;
+				} else {
+					e.div.innerHTML = e.getWeight();
+				}
 			}
 			
 			edge = edge.getNext();
