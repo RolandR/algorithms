@@ -1,16 +1,15 @@
 /*
 
-=== Set ===
+=== Unordered Set ===
 
 Insert takes O(n) time
-Remove takes O(1) time
 
-Like priority queue, takes values instead of pairs and deduplicates
+Only deduplicates, unlike Set, which also orders
 
 */
 
 
-function Set(){
+function UnorderedSet(){
 
 	var first = null;
 	var last = null;
@@ -37,40 +36,18 @@ function Set(){
 			
 		} else {
 			var node = first;
-			var previous = null;
-			
 			while (node){
-				if(node.getE() > value){
-					// Insert before
-					if(previous){
-						previous.setNext(new Element(value));
-						previous.getNext().setNext(node);
-					} else {
-						first = new Element(value);
-						first.setNext(node);
-					}
-					length++;
-					break;
-				} else if(node.getE() < value){
-					if(!node.getNext()){
-						node.setNext(new Element(value));
-						last = node.getNext();
-						length++;
-						break;
-					} else {
-						var next = node.getNext();
-						node.setNext(new Element(value));
-						node.getNext().setNext(next);
-						length++;
-						break;
-					}
-				} else {
+				if(node.getE() == value){
 					// element exists already, skip
 					return node;
 				}
-				previous = node;
 				node = node.getNext();
 			}
+
+			var newNode = new Element(value);
+			newNode.setNext(first);
+			first = newNode;
+			length++;
 		}
 	}
 

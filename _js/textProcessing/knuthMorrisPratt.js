@@ -52,14 +52,6 @@ function matchKMP(text, string){
 					j++;
 				}
 			} else {
-
-				/*var whitespace = "";
-				var x = i - compared.length + 1;
-				while(x--){
-					whitespace += " ";
-				}
-				console.log(text + "\n" + whitespace + compared);
-				compared = "";*/
 				
 				if(j>0){
 					j = f[j-1];

@@ -112,6 +112,21 @@ function DoublyLinkedList(){
 		b.setE(aContent);
 	}
 
+	function toArray(){
+		var array = [];
+		
+		var node = getFirst();
+		while(node && node.isElement){
+			var e = node.getE();
+
+			array.push(e);
+			
+			node = node.getNext();
+		}
+
+		return array;
+	}
+
 	function print(){
 		var outString = "Length: "+length+"\n";
 
@@ -137,6 +152,7 @@ function DoublyLinkedList(){
 		,swapContent: swapContent
 		,getFirst: getFirst
 		,getLast: getLast
+		,toArray: toArray
 		,print: print
 	};
 }

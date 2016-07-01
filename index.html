@@ -13,6 +13,8 @@
 		<script type="text/javascript" src="_js/dataStructures/heap.js"></script>
 		<script type="text/javascript" src="_js/dataStructures/binarySearchTree.js"></script>
 		<script type="text/javascript" src="_js/dataStructures/set.js"></script>
+		<script type="text/javascript" src="_js/dataStructures/unorderedSet.js"></script>
+		<script type="text/javascript" src="_js/dataStructures/partition.js"></script>
 		
 		<script type="text/javascript" src="_js/trees/avlTree.js"></script>
 		<script type="text/javascript" src="_js/trees/redBlackTree.js"></script>
@@ -30,17 +32,21 @@
 		<script type="text/javascript" src="_js/textProcessing/huffmanTree.js"></script>
 		
 		<script type="text/javascript" src="_js/graphs/graph.js"></script>
-		<script type="text/javascript" src="_js/graphs/digraph.js"></script>
 		<script type="text/javascript" src="_js/graphs/graphTool.js"></script>
+		
 		<script type="text/javascript" src="_js/graphs/depthFirstSearch.js"></script>
 		<script type="text/javascript" src="_js/graphs/breadthFirstSearch.js"></script>
 		<script type="text/javascript" src="_js/graphs/hasStrongConnectivity.js"></script>
 		<script type="text/javascript" src="_js/graphs/floydWarshall.js"></script>
 		<script type="text/javascript" src="_js/graphs/topologicalSorting.js"></script>
+		
 		<script type="text/javascript" src="_js/graphs/dijkstra.js"></script>
 		<script type="text/javascript" src="_js/graphs/bellmanFord.js"></script>
 		<script type="text/javascript" src="_js/graphs/dagDistances.js"></script>
 		<script type="text/javascript" src="_js/graphs/allShortestPairs.js"></script>
+		
+		<script type="text/javascript" src="_js/graphs/primJarnik.js"></script>
+		<script type="text/javascript" src="_js/graphs/kruskal.js"></script>
 		
 		<title>
 			All the Algorithms
@@ -68,6 +74,7 @@
 				<option value="WzEsMSxbWyJJIiwyNDAsMzMzXSxbIkgiLDQyNiwzMzhdLFsiRyIsMzI0LDE5NF0sWyJGIiw0MTQsNTk0XSxbIkUiLDUwNCw0ODFdLFsiRCIsMTYxLDQ4NV0sWyJDIiwyMjYsNjA4XSxbIkIiLDU4MCw2MDddLFsiQSIsMzQzLDQ5MF1dLFtbIkQiLCJDIiwxLDBdLFsiSSIsIkQiLDEsMF0sWyJFIiwiRiIsMSwwXSxbIkciLCJIIiwxLDBdLFsiRSIsIkIiLDEsMF0sWyJHIiwiSSIsMSwwXSxbIkgiLCJBIiwxLDBdLFsiSCIsIkUiLDEsMF1dXQ==">Tree</option>
 				<option value="WzEsMSxbWyJBIiwzMDAsMjc1XSxbIkIiLDU1LDIyNV0sWyJDIiw0ODUsMzYwXSxbIkQiLDQyNyw1NjRdLFsiRSIsMzE3LDQyMl0sWyJGIiwyMDgsMzM4XSxbIkciLDcxLDQ1OF0sWyJIIiw0NjUsMTQyXSxbIkkiLDIwNyw2N11dLFtbIkUiLCJEIiwxLDBdLFsiQiIsIkEiLDEsMF0sWyJJIiwiQSIsMSwwXSxbIkgiLCJBIiwxLDBdLFsiQSIsIkMiLDEsMF0sWyJJIiwiQiIsMSwwXSxbIkMiLCJEIiwxLDBdLFsiQyIsIkUiLDEsMF0sWyJIIiwiQyIsMSwwXSxbIkYiLCJFIiwxLDBdLFsiQiIsIkciLDEsMF0sWyJHIiwiRCIsMSwwXSxbIkIiLCJGIiwxLDBdXV0=">Directed Acyclic</option>
 				<option value="WzEsMCxbWyJGIiwzNDYsMzY3XSxbIkUiLDE1NSwzNzNdLFsiRCIsNDI4LDIyNV0sWyJDIiwyNDAsMjI1XSxbIkIiLDYwLDIyNF0sWyJBIiwyMzksNzhdXSxbWyJDIiwiQiIsNywwXSxbIkMiLCJEIiwxLDBdLFsiQSIsIkMiLDIsMF0sWyJEIiwiQSIsNCwwXSxbIkYiLCJEIiw1LDBdLFsiQyIsIkYiLDksMF0sWyJFIiwiQyIsMywwXSxbIkIiLCJFIiwyLDBdLFsiQSIsIkIiLDgsMF1dXQ==">Weighted Undirected</option>
+				<option value="WzEsMCxbWyJGIiw1NDIsMjExXSxbIkUiLDQxMSw5OF0sWyJEIiw4OCwzNzddLFsiQyIsMjQyLDIzN10sWyJCIiwxMTcsOTZdLFsiQSIsNTA4LDM0NF1dLFtbIkUiLCJCIiw3LDBdLFsiRCIsIkIiLDIsMF0sWyJGIiwiRSIsNCwwXSxbIkQiLCJBIiw3LDBdLFsiQyIsIkQiLDgsMF0sWyJBIiwiQyIsOCwwXSxbIkYiLCJBIiwzLDBdLFsiQyIsIkUiLDksMF0sWyJCIiwiQyIsNSwwXV1d">Weighted Undirected II</option>
 				<option value="WzEsMSxbWyJBIiwyMzksNzhdLFsiQiIsNjAsMjI0XSxbIkMiLDI0MCwyMjVdLFsiRCIsNDI4LDIyNV0sWyJFIiwxNTUsMzczXSxbIkYiLDM0NiwzNjddXSxbWyJGIiwiQyIsOSwwXSxbIkQiLCJGIiw1LDBdLFsiQyIsIkUiLDMsMF0sWyJBIiwiRCIsNCwwXSxbIkEiLCJCIiw4LDBdLFsiQiIsIkUiLC0yLDBdLFsiQSIsIkMiLC0yLDBdLFsiQyIsIkQiLDEsMF0sWyJDIiwiQiIsNywwXV1d">Weighted Directed with negative</option>
 				<option value="WzEsMSxbWyJGIiwzNDYsMzY3XSxbIkUiLDE1NSwzNzNdLFsiRCIsNDI4LDIyNV0sWyJDIiwyNDAsMjI1XSxbIkIiLDYwLDIyNF0sWyJBIiwyMzksNzhdXSxbWyJDIiwiRiIsOSwwXSxbIkMiLCJCIiw3LDBdLFsiQyIsIkQiLDEsMF0sWyJBIiwiQyIsLTIsMF0sWyJCIiwiRSIsLTUsMF0sWyJBIiwiQiIsOCwwXSxbIkEiLCJEIiw0LDBdLFsiQyIsIkUiLDMsMF0sWyJEIiwiRiIsNSwwXV1d">Directed Acyclic with negative</option>
 			</select>
@@ -87,10 +94,14 @@
 				<button onclick="topologicalSorting(graphTool);">Topo Sort</button>
 				<button onclick="topologicalSorting(graphTool, true);">(only selected)</button>
 			</div>
+			<hr />
 			<button onclick="dijkstra(graphTool);">Dijkstra</button>
 			<button onclick="bellmanFord(graphTool);">Bellman-Ford</button>
 			<button onclick="dagDistances(graphTool);">DAG Distances</button>
 			<button onclick="allShortestPairs(graphTool);">All Shortest Pairs</button>
+			<hr />
+			<button onclick="primJarnik(graphTool);">Prim-Jarnik</button>
+			<button onclick="kruskal(graphTool);">Kruskal</button>
 			<hr />
 			<h3>Animation</h3>
 			<div>
@@ -109,11 +120,12 @@
 			var priorityQueue = new PriorityQueue();
 			var heap = new Heap();
 			var set = new Set();
+			var unorderedSet = new UnorderedSet();
+			var partition = new Partition();
 			var binarySearchTree = new BinarySearchTree();
 			var avlTree = new AVLTree();
 			var redBlackTree = new RedBlackTree();
 			var graph = new Graph();
-			var digraph = new Digraph();
 			var graphTool = new GraphTool(graph, "graphTool");
 			var standardTrie = new StandardTrie();
 			var huffmanTree = new HuffmanTree();
