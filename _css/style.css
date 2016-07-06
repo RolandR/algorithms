@@ -15,7 +15,7 @@ body{
 	height: 100%;
 }
 #graphTool{
-	width: 100%;
+	width: calc(100% - 270px);
 	height: 90%;
 	position: relative;
 }
@@ -32,6 +32,7 @@ body{
 #graphTool canvas{
 	border: 1px #888888 solid;
 	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+	background-color: #FFFFFF;
 }
 
 #graphTool div.vertexLabel{
@@ -55,37 +56,35 @@ body{
 #graphTool div.vertexLabel:hover{
 	background-color: #EEF9FF;
 }
-
 #graphTool div.vertexLabel.activeVertex{
 	background-color: #FFCCCC;
 }
-
 #graphTool div.vertexLabel.activeVertex:hover{
 	background-color: #FFEEEE;
 }
-
 #graphTool div.vertexLabel.activeVertex.unexplored{
 	background-color: #DDAAAA;
 }
-
 #graphTool div.vertexLabel.activeVertex.explored{
 	background-color: #FFEEAA;
 }
-
 #graphTool div.vertexLabel.unexplored{
 	background-color: #DDDDDD;
 }
-
 #graphTool div.vertexLabel.explored{
 	background-color: #CCFFCC;
 }
-
 #graphTool div.vertexLabel.warn{
 	background-color: #FF8888;
 }
-
 #graphTool div.vertexLabel.okay{
 	background-color: #88FF88;
+}
+#graphTool div.vertexLabel.source{
+	box-shadow: 0px 0px 5px 5px rgba(0, 255, 128, 0.5);
+}
+#graphTool div.vertexLabel.sink{
+	box-shadow: 0px 0px 5px 5px rgba(225, 0, 128, 0.5);
 }
 
 #graphTool div.vertexLabel.highlighted{
@@ -116,39 +115,30 @@ body{
 #graphTool div.edgeLabel:hover{
 	background-color: #EEF9FF;
 }
-
 #graphTool div.edgeLabel.activeEdge{
 	background-color: #FFCCCC;
 }
-
 #graphTool div.edgeLabel.activeEdge:hover{
 	background-color: #FFEEEE;
 }
-
 #graphTool div.edgeLabel.unexplored{
 	background-color: #EEEEEE;
 }
-
 #graphTool div.edgeLabel.discovery{
 	background-color: #CCFFCC;
 }
-
 #graphTool div.edgeLabel.back{
 	background-color: #FFEEEE;
 }
-
 #graphTool div.edgeLabel.warn{
 	background-color: #FF8888;
 }
-
 #graphTool div.edgeLabel.okay{
 	background-color: #88FF88;
 }
-
 #graphTool div.edgeLabel.temp{
-	opacity: 0.5;
+	border-color: #0088FF;
 }
-
 #graphTool div.edgeLabel.invisible{
 	display: none !important;
 }
@@ -296,8 +286,30 @@ input{
 	outline: none;
 }
 
+#selectVertexOverlay{
+	display: none;
+	background-color: rgba(0, 0, 0, 0.2);
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	z-index: 500;
+}
 
+#title{
+	position: relative;
+	z-index: 1000;
+	text-shadow: 1px 1px #FFFFFF;
+}
 
+#graphTool{
+	z-index: 1000;
+}
+
+#graphToolControls{
+	z-index: 100;
+}
 
 
 

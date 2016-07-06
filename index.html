@@ -48,17 +48,20 @@
 		<script type="text/javascript" src="_js/graphs/primJarnik.js"></script>
 		<script type="text/javascript" src="_js/graphs/kruskal.js"></script>
 		
+		<script type="text/javascript" src="_js/graphs/fordFulkerson.js"></script>
+		<script type="text/javascript" src="_js/graphs/edmondsKarp.js"></script>
+		
 		<title>
 			All the Algorithms
 		</title>
 
 	</head>
 	<body>
-		<h1>All the Algorithms</h1>
+		<h1 id="title">All the Algorithms</h1>
 
 		<div id="out"></div>
-		<div id="graphTool">
-		</div>
+		<div id="graphTool"></div>
+		<div id="selectVertexOverlay"></div>
 		<div id="graphToolControls">
 			<h2 id="graphToolTitle">Undirected Graph</h2>
 			<button id="toggleDirectedButton" onclick="graphTool.toggleDirected();">Make Directed</button>
@@ -77,6 +80,7 @@
 				<option value="WzEsMCxbWyJGIiw1NDIsMjExXSxbIkUiLDQxMSw5OF0sWyJEIiw4OCwzNzddLFsiQyIsMjQyLDIzN10sWyJCIiwxMTcsOTZdLFsiQSIsNTA4LDM0NF1dLFtbIkUiLCJCIiw3LDBdLFsiRCIsIkIiLDIsMF0sWyJGIiwiRSIsNCwwXSxbIkQiLCJBIiw3LDBdLFsiQyIsIkQiLDgsMF0sWyJBIiwiQyIsOCwwXSxbIkYiLCJBIiwzLDBdLFsiQyIsIkUiLDksMF0sWyJCIiwiQyIsNSwwXV1d">Weighted Undirected II</option>
 				<option value="WzEsMSxbWyJBIiwyMzksNzhdLFsiQiIsNjAsMjI0XSxbIkMiLDI0MCwyMjVdLFsiRCIsNDI4LDIyNV0sWyJFIiwxNTUsMzczXSxbIkYiLDM0NiwzNjddXSxbWyJGIiwiQyIsOSwwXSxbIkQiLCJGIiw1LDBdLFsiQyIsIkUiLDMsMF0sWyJBIiwiRCIsNCwwXSxbIkEiLCJCIiw4LDBdLFsiQiIsIkUiLC0yLDBdLFsiQSIsIkMiLC0yLDBdLFsiQyIsIkQiLDEsMF0sWyJDIiwiQiIsNywwXV1d">Weighted Directed with negative</option>
 				<option value="WzEsMSxbWyJGIiwzNDYsMzY3XSxbIkUiLDE1NSwzNzNdLFsiRCIsNDI4LDIyNV0sWyJDIiwyNDAsMjI1XSxbIkIiLDYwLDIyNF0sWyJBIiwyMzksNzhdXSxbWyJDIiwiRiIsOSwwXSxbIkMiLCJCIiw3LDBdLFsiQyIsIkQiLDEsMF0sWyJBIiwiQyIsLTIsMF0sWyJCIiwiRSIsLTUsMF0sWyJBIiwiQiIsOCwwXSxbIkEiLCJEIiw0LDBdLFsiQyIsIkUiLDMsMF0sWyJEIiwiRiIsNSwwXV1d">Directed Acyclic with negative</option>
+				<option value="WzEsMSxbWyJGIiw1MjcsMTEwXSxbIkUiLDU0LDIxMl0sWyJEIiw0MjAsMzIyXSxbIkMiLDE0OSwzNTFdLFsiQiIsMTg0LDk4XSxbIkEiLDI5MSwyMDddXSxbWyJFIiwiQSIsMywwXSxbIkIiLCJGIiwzLDBdLFsiRSIsIkIiLDYsMF0sWyJEIiwiRiIsNSwwXSxbIkMiLCJBIiwxLDBdLFsiQSIsIkQiLDksMF0sWyJCIiwiQSIsMSwwXSxbIkUiLCJDIiw1LDBdLFsiQyIsIkQiLDIsMF0sWyJBIiwiRiIsNywwXV1d">Flow Network</option>
 			</select>
 			<hr />
 			<h3>Algorithms</h3>
@@ -102,6 +106,9 @@
 			<hr />
 			<button onclick="primJarnik(graphTool);">Prim-Jarnik</button>
 			<button onclick="kruskal(graphTool);">Kruskal</button>
+			<hr />
+			<button onclick="fordFulkersonClick(graphTool);">Ford-Fulkerson</button>
+			<button onclick="edmondsKarpClick(graphTool);">Edmonds-Karp</button>
 			<hr />
 			<h3>Animation</h3>
 			<div>

@@ -31,6 +31,7 @@ function GraphTool(graph, containerId){
 	var moveStart = null;
 	var screenMoveStart = null;
 	var moving = false;
+	var vertexSelectFunction = null;
 
 	function selectEdge(e){
 		if(selectedNode){
@@ -48,6 +49,7 @@ function GraphTool(graph, containerId){
 	}
 
 	function selectNode(v){
+	
 		if(selectedEdge){
 			selectedEdge.attributes.marked = false;
 			selectedEdge.div.setAttribute("contentEditable", false);
@@ -59,6 +61,7 @@ function GraphTool(graph, containerId){
 		}
 		selectedNode = v;
 		selectedNode.attributes.marked = true;
+		
 		render();
 	}
 
@@ -154,19 +157,26 @@ function GraphTool(graph, containerId){
 				}
 				
 				if(!moving){
-					if(!selectedNode){
-						selectNode(v);
+					if(vertexSelectFunction){
+						vertexSelectFunction[0](vertexSelectFunction[1], v);
+						vertexSelectFunction = null;
+						document.getElementById("selectVertexOverlay").style.display = "none";
+						document.getElementById("title").innerHTML = "All the Algorithms";
 					} else {
-						if(selectedNode != v){
-							if(selectedNode.isConnectedTo(v)){
-								selectNode(v);
-							} else {
-								makeConnection(v);
-							}
+						if(!selectedNode){
+							selectNode(v);
 						} else {
-							selectedNode.attributes.marked = false;
-							selectedNode = null;
-							render();
+							if(selectedNode != v){
+								if(selectedNode.isConnectedTo(v)){
+									selectNode(v);
+								} else {
+									makeConnection(v);
+								}
+							} else {
+								selectedNode.attributes.marked = false;
+								selectedNode = null;
+								render();
+							}
 						}
 					}
 				}
@@ -361,15 +371,12 @@ function GraphTool(graph, containerId){
 				if(e.attributes.aWarn === true){
 					e.div.className += " warn";
 				}
-
 				if(e.attributes.aOkay === true){
 					e.div.className += " okay";
 				}
-
 				if(e.attributes.temporary === true){
 					e.div.className += " temp";
 				}
-
 				if(e.attributes.invisible === true){
 					e.div.className += " invisible";
 				}
@@ -406,11 +413,15 @@ function GraphTool(graph, containerId){
 			if(v.attributes.aWarn === true){
 				v.div.className += " warn";
 			}
-
+			if(v.attributes.source === true){
+				v.div.className += " source";
+			}
+			if(v.attributes.sink === true){
+				v.div.className += " sink";
+			}
 			if(v.attributes.aOkay === true){
 				v.div.className += " okay";
 			}
-
 			if(v.attributes.highlighted === true){
 				v.div.className += " highlighted";
 			}
@@ -696,6 +707,15 @@ function GraphTool(graph, containerId){
 		render();
 	}
 
+	function requestVertex(callback, a){
+		// callback will be called on vertex select
+		vertexSelectFunction = [callback, a];
+
+		document.getElementById("selectVertexOverlay").style.display = "block";
+		document.getElementById("title").innerHTML = "Select a vertex:";
+		
+	}
+
 	function scale(){
 		var size = min([container.offsetWidth, container.offsetHeight]);
 		canvas.width = size;
@@ -716,6 +736,7 @@ function GraphTool(graph, containerId){
 		,registerEdge: registerEdge
 		,unregisterEdge: unregisterEdge
 		,highlightNode: highlightNode
+		,requestVertex: requestVertex
 		,asString: asString
 		,fromString: fromString
 	};
