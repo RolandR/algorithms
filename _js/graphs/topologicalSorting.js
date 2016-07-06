@@ -1,8 +1,6 @@
 
 /*
-	Depth First Search
-
-	runs in O(n+m) using adjacency list
+	Topological Sort
 	
 */
 function topologicalSorting(graphTool, onlySelected){
